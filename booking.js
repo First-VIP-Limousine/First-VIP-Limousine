@@ -195,18 +195,22 @@ function closeSuccessPopup() {
 }
 
 function showErrorPopup(title, message) {
-    let popup = document.createElement("div");
-    popup.classList.add("error-popup");
+  let popup = document.createElement("div");
+  popup.classList.add("error-popup");
 
-    popup.innerHTML = `
-        <div class="error-popup-content">
-            <span class="error-icon">✖</span>
-            <h2>${title}</h2>
-            <p>${message}</p>
-            <button onclick="closeErrorPopup()">OK</button>
-        </div>
-    `;
-    document.body.appendChild(popup);
+  popup.innerHTML = `
+    <div class="error-popup-content">
+      <span class="error-icon">✖</span>
+      <h2>${title}</h2>
+      <p>${message}</p>
+      <button class="error-ok-btn">OK</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+
+  popup.querySelector(".error-ok-btn").addEventListener("click", () => {
+    popup.remove();
+  });
 }
 
 function closeErrorPopup() {
@@ -251,8 +255,26 @@ function updateStepTracker(activeStep) {
 }
 
 const translations = {
-  /* dein translations-Objekt unverändert hier … */
-  // (lass einfach den Block aus deiner aktuellen Datei stehen)
+  de: {
+    errorTitle: "Fehler",
+    errorFillAllFields: "Bitte füllen Sie alle Felder aus.",
+    errorSelectCar: "Bitte wählen Sie ein Fahrzeug aus.",
+    errorCaptcha: "Bitte bestätigen Sie, dass Sie kein Roboter sind.",
+    errorSend: "Buchung konnte nicht gespeichert werden.",
+    errorConnection: "Verbindungsfehler: ",
+    successTitle: "Buchung erfolgreich",
+    successMessage: "Vielen Dank, wir haben Ihre Buchung erhalten. Wir melden uns in Kürze."
+  },
+  en: {
+    errorTitle: "Error",
+    errorFillAllFields: "Please fill in all required fields.",
+    errorSelectCar: "Please select a vehicle.",
+    errorCaptcha: "Please confirm that you are not a robot.",
+    errorSend: "Booking could not be saved.",
+    errorConnection: "Connection error: ",
+    successTitle: "Booking successful",
+    successMessage: "Thank you, we have received your booking and will contact you shortly."
+  }
 };
 
 function getLang() {
@@ -273,7 +295,94 @@ function toggleLanguageDropdown() {
 }
 
 function switchLanguage(lang) {
-  /* dein vorhandener switchLanguage-Code – ebenfalls einfach übernehmen */
+    localStorage.setItem('language', lang);
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll('[data-key]').forEach(element => {
+        const key = element.getAttribute('data-key');
+        if (translations[lang][key]) {
+            if (key === 'phone') {
+                element.innerHTML = lang === 'de'
+                    ? 'Telefon: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a>'
+                    : 'Phone: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a>';
+            } else if (key === 'email') {
+                element.innerHTML = lang === 'de'
+                    ? 'E-Mail: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a>'
+                    : 'Email: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a>';
+            } else {
+                element.textContent = translations[lang][key];
+            }
+        }
+    });
+
+    document.getElementById('pickup').placeholder = translations[lang]['pickupPlaceholder'];
+    document.getElementById('destination').placeholder = translations[lang]['destinationPlaceholder'];
+    document.getElementById('name').placeholder = translations[lang]['namePlaceholder'];
+    document.getElementById('phone').placeholder = translations[lang]['phonePlaceholder'];
+
+const passengerSelect = document.getElementById('passengers');
+if (passengerSelect) {
+    passengerSelect.innerHTML = `
+        <option value="">${translations[lang]['passengerOption']}</option>
+        <option value="1">1 ${lang === 'de' ? 'Passagier' : 'passenger'}</option>
+        <option value="2">2 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
+        <option value="3">3 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
+        <option value="4">4 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
+        <option value="5">5 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
+        <option value="6">6 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
+    `;
+}
+
+const luggageSelect = document.getElementById('luggage');
+if (luggageSelect) {
+    luggageSelect.innerHTML = `
+        <option value="">${translations[lang]['luggageOption']}</option>
+        <option value="0">0 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
+        <option value="1">1 ${lang === 'de' ? 'Gepäckstück' : 'luggage item'}</option>
+        <option value="2">2 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
+        <option value="3">3 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
+        <option value="4">4 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
+        <option value="5">5 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
+    `;
+}
+    const flag = lang === 'de'
+        ? 'https://flagcdn.com/w40/de.png'
+        : 'https://flagcdn.com/w40/gb.png';
+    const languageText = lang === 'de' ? 'Deutsch' : 'English';
+
+    document.getElementById('current-flag').src = flag;
+    document.getElementById('current-language-text').textContent = languageText;
+    document.getElementById('language-dropdown').style.display = 'none';
+    document.querySelector('.dropdown-arrow').style.transform = 'rotate(0deg)';
+
+    const flagSidebar = document.getElementById('current-flag-sidebar');
+    const textSidebar = document.getElementById('current-language-text-sidebar');
+    const dropdownSidebar = document.getElementById('language-dropdown-sidebar');
+
+    if (flagSidebar && textSidebar && dropdownSidebar) {
+        flagSidebar.src = flag;
+        textSidebar.textContent = languageText;
+
+        dropdownSidebar.innerHTML = '';
+        if (lang === 'de') {
+            dropdownSidebar.innerHTML = `
+                <div onclick="switchLanguage('en')">
+                    <img src="https://flagcdn.com/w40/gb.png" alt="English"> English
+                </div>`;
+        } else {
+            dropdownSidebar.innerHTML = `
+                <div onclick="switchLanguage('de')">
+                    <img src="https://flagcdn.com/w40/de.png" alt="Deutsch"> Deutsch
+                </div>`;
+        }
+
+        dropdownSidebar.style.display = 'none';
+    }
+
+    if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById("mobileSidebar");
+        if (sidebar) sidebar.classList.remove("open");
+    }
 }
 
 function handleMenuClick() {
@@ -313,7 +422,6 @@ window.toggleLanguageDropdown = toggleLanguageDropdown;
 window.handleMenuClick = handleMenuClick;
 window.toggleMobileSidebar = toggleMobileSidebar;
 window.toggleLanguageDropdownSidebar = toggleLanguageDropdownSidebar;
-window.closeErrorPopup = closeErrorPopup;
-window.closeWarningPopup = closeWarningPopup;
+
 
 
