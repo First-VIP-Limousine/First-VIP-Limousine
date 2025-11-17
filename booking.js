@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     selectCar(selectedVehicle);
   }
 
-  // Sprache initial setzen
+  // Sprache initial setzen wie früher
   const lang = getLang();
   switchLanguage(lang);
 });
@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // -----------------------------------------------------------------------------
 function nextStep(step) {
   if (!validateStep(step)) return;
-
   document.getElementById(`step${step}`).style.display = 'none';
   const nextStepId = step + 1;
   if (document.getElementById(`step${nextStepId}`)) {
@@ -112,7 +111,7 @@ async function sendBooking() {
 
     if (error) {
       console.error('Supabase insert error:', error);
-      showErrorPopup(t.errorTitle, t.errorSend || 'Buchung konnte nicht gespeichert werden.');
+      showErrorPopup(t.errorTitle, t.errorSend);
       return;
     }
 
@@ -128,10 +127,7 @@ async function sendBooking() {
     updateStepTracker(1);
   } catch (err) {
     console.error('Supabase connection error:', err);
-    showErrorPopup(
-      t.errorTitle,
-      (t.errorConnection || 'Verbindungsfehler: ') + (err.message || err.toString())
-    );
+    showErrorPopup(t.errorTitle, t.errorConnection + (err.message || err.toString()));
   }
 }
 
@@ -154,7 +150,9 @@ function validateStep(step) {
       showErrorPopup(t.errorTitle, t.errorFillAllFields);
       return false;
     }
-  } else if (step === 2) {
+  }
+
+  if (step === 2) {
     const passengers = document.getElementById('passengers').value;
     const luggage = document.getElementById('luggage').value;
 
@@ -162,7 +160,9 @@ function validateStep(step) {
       showErrorPopup(t.errorTitle, t.errorFillAllFields);
       return false;
     }
-  } else if (step === 3) {
+  }
+
+  if (step === 3) {
     const passengers = parseInt(document.getElementById('passengers').value) || 0;
     const luggage = parseInt(document.getElementById('luggage').value) || 0;
 
@@ -178,12 +178,9 @@ function validateStep(step) {
       return false;
     }
 
-    // reCAPTCHA nur im letzten Schritt prüfen
-    if (typeof grecaptcha !== 'undefined') {
-      if (!grecaptcha.getResponse()) {
-        showErrorPopup(t.errorTitle, t.errorCaptcha);
-        return false;
-      }
+    if (typeof grecaptcha !== 'undefined' && !grecaptcha.getResponse()) {
+      showErrorPopup(t.errorTitle, t.errorCaptcha);
+      return false;
     }
   }
 
@@ -201,13 +198,13 @@ function showSuccessPopup(title, message) {
   popup.classList.add('success-popup');
 
   popup.innerHTML = `
-    <div class="success-popup-content">
-      <span class="success-icon">✔</span>
-      <h2>${title}</h2>
-      <p>${message}</p>
-      <button id="success-ok-btn">OK</button>
-    </div>
-  `;
+        <div class="success-popup-content">
+            <span class="success-icon">✔</span>
+            <h2>${title}</h2>
+            <p>${message}</p>
+            <button id="success-ok-btn">OK</button>
+        </div>
+    `;
   document.body.appendChild(popup);
 
   document.getElementById('success-ok-btn').addEventListener('click', () => {
@@ -231,13 +228,13 @@ function showErrorPopup(title, message) {
   popup.classList.add('error-popup');
 
   popup.innerHTML = `
-    <div class="error-popup-content">
-      <span class="error-icon">✖</span>
-      <h2>${title}</h2>
-      <p>${message}</p>
-      <button class="error-ok-btn">OK</button>
-    </div>
-  `;
+        <div class="error-popup-content">
+            <span class="error-icon">✖</span>
+            <h2>${title}</h2>
+            <p>${message}</p>
+            <button class="error-ok-btn">OK</button>
+        </div>
+    `;
   document.body.appendChild(popup);
 
   popup.querySelector('.error-ok-btn').addEventListener('click', () => {
@@ -250,13 +247,13 @@ function showWarningPopup(title, message) {
   popup.classList.add('warning-popup');
 
   popup.innerHTML = `
-    <div class="warning-popup-content">
-      <span class="warning-icon">⚠</span>
-      <h2>${title}</h2>
-      <p>${message}</p>
-      <button class="warning-ok-btn">OK</button>
-    </div>
-  `;
+        <div class="warning-popup-content">
+            <span class="warning-icon">⚠</span>
+            <h2>${title}</h2>
+            <p>${message}</p>
+            <button class="warning-ok-btn">OK</button>
+        </div>
+    `;
   document.body.appendChild(popup);
 
   popup.querySelector('.warning-ok-btn').addEventListener('click', () => {
@@ -280,7 +277,7 @@ function updateStepTracker(activeStep) {
 }
 
 // -----------------------------------------------------------------------------
-// Übersetzungen
+// Übersetzungen (EXAKT wie dein alter Code)
 // -----------------------------------------------------------------------------
 const translations = {
   de: {
@@ -324,8 +321,7 @@ const translations = {
     // Infobox
     whyChooseUs: 'Warum sollten Sie sich für uns entscheiden?',
     luxury: 'Luxus pur:',
-    luxuryText:
-      'Erleben Sie höchste Eleganz und Komfort mit unseren Premium-Fahrzeugen.',
+    luxuryText: 'Erleben Sie höchste Eleganz und Komfort mit unseren Premium-Fahrzeugen.',
     punctuality: 'Pünktlichkeit garantiert:',
     punctualityText:
       'Verlassen Sie sich auf absolute Zuverlässigkeit – wir sind immer zur richtigen Zeit am richtigen Ort.',
@@ -396,8 +392,7 @@ const translations = {
     // Info box
     whyChooseUs: 'Why should you choose us?',
     luxury: 'Pure Luxury:',
-    luxuryText:
-      'Experience the highest elegance and comfort with our premium vehicles.',
+    luxuryText: 'Experience the highest elegance and comfort with our premium vehicles.',
     punctuality: 'Punctuality Guaranteed:',
     punctualityText:
       'Rely on absolute dependability – we’re always at the right place at the right time.',
@@ -430,11 +425,10 @@ const translations = {
 };
 
 // -----------------------------------------------------------------------------
-// Sprache
+// Sprache (wie früher)
 // -----------------------------------------------------------------------------
 function getLang() {
-  const stored = localStorage.getItem('language') || 'de';
-  return translations[stored] ? stored : 'de';
+  return localStorage.getItem('language') || 'de';
 }
 
 function toggleLanguageDropdown() {
@@ -451,8 +445,6 @@ function toggleLanguageDropdown() {
 }
 
 function switchLanguage(lang) {
-  if (!translations[lang]) lang = 'de';
-
   localStorage.setItem('language', lang);
   document.documentElement.lang = lang;
 
