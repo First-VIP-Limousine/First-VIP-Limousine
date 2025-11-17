@@ -195,18 +195,18 @@ function closeSuccessPopup() {
 }
 
 function showErrorPopup(title, message) {
-  let popup = document.createElement("div");
-  popup.classList.add("error-popup");
+    let popup = document.createElement("div");
+    popup.classList.add("error-popup");
 
-  popup.innerHTML = `
-    <div class="error-popup-content">
-      <span class="error-icon">✖</span>
-      <h2>${title}</h2>
-      <p>${message}</p>
-      <button onclick="closeErrorPopup()">OK</button>
-    </div>
-  `;
-  document.body.appendChild(popup);
+    popup.innerHTML = `
+        <div class="error-popup-content">
+            <span class="error-icon">✖</span>
+            <h2>${title}</h2>
+            <p>${message}</p>
+            <button onclick="closeErrorPopup()">OK</button>
+        </div>
+    `;
+    document.body.appendChild(popup);
 }
 
 function closeErrorPopup() {
@@ -315,4 +315,5 @@ window.toggleMobileSidebar = toggleMobileSidebar;
 window.toggleLanguageDropdownSidebar = toggleLanguageDropdownSidebar;
 window.closeErrorPopup = closeErrorPopup;
 window.closeWarningPopup = closeWarningPopup;
+
 
