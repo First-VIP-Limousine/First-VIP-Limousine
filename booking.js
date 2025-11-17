@@ -23,9 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
     selectCar(selectedVehicle);
   }
 
-  // Sprache initial setzen wie früher
+  // Standard ist Deutsch (steht so im HTML).
+  // Nur wenn etwas anderes gespeichert ist (z.B. 'en'), umschalten.
   const lang = getLang();
-  switchLanguage(lang);
+  if (lang !== 'de') {
+    switchLanguage(lang);
+  }
 });
 
 // -----------------------------------------------------------------------------
@@ -428,7 +431,8 @@ const translations = {
 // Sprache (wie früher)
 // -----------------------------------------------------------------------------
 function getLang() {
-  return localStorage.getItem('language') || 'de';
+  const stored = localStorage.getItem('language') || 'de';
+  return translations[stored] ? stored : 'de';
 }
 
 function toggleLanguageDropdown() {
@@ -583,3 +587,4 @@ window.handleMenuClick = handleMenuClick;
 window.toggleMobileSidebar = toggleMobileSidebar;
 window.toggleLanguageDropdownSidebar = toggleLanguageDropdownSidebar;
 window.toggleMenu = toggleMenu;
+
