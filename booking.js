@@ -524,3 +524,5 @@ window.toggleLanguageDropdown = toggleLanguageDropdown;
 window.handleMenuClick = handleMenuClick;
 window.toggleMobileSidebar = toggleMobileSidebar;
 window.toggleLanguageDropdownSidebar = toggleLanguageDropdownSidebar;
+window.closeErrorPopup = closeErrorPopup;
+window.closeWarningPopup = closeWarningPopup;
