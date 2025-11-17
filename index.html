@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="Airport Transfer, Limousinenservice, Taxi, Limousinen, Airport Zürich, Flughafentransfer, Luxus Limousinenservice, VIP Service, VIP Limousine, Chauffeurservice, Zürich Limousine, Zürich Flughafentransfer">
+    <meta property="og:title" content="Luxus Limousinenservice & Flughafentransfer in Zürich">
+    <meta property="og:description" content="Erleben Sie exklusive Fahrten mit unserem VIP Limousinenservice in Zürich. Buchen Sie jetzt Ihren Flughafentransfer.">
+    <meta property="og:image" content="https://zuerich-airport-vip-first-service.com/background_startseite.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://zuerich-airport-vip-first-service.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   	<link rel="icon" type="image/png" href="logo_first_vip_limousine.png">
+    <!-- Standard-Favicon -->
+    <link rel="icon" href="logo_first_vip_limousine.png" sizes="192x192" type="image/png">
+    <!-- Apple-Geräte -->
+    <link rel="apple-touch-icon" href="logo_first_vip_limousine.png">
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileImage" content="logo_first_vip_limousine.png">
+    <title>Startseite - First VIP Limousine</title>
+    <link rel="canonical" href="https://firstviplimousine.com/" />
+    <meta name="description" content="Exklusiver Limousinen Service für besondere Gäste & VIPs in Zürich. Professionelle Fahrten zu besonderen Anlässen. Jetzt buchen!">
+    <link rel="stylesheet" href="style.css">
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "name": "First VIP Limousine",
+          "image": "https://zuerich-airport-vip-first-service.com/background_startseite.jpg",
+          "logo": "https://zuerich-airport-vip-first-service.com/logo_first_vip_limousine.png",
+          "url": "https://zuerich-airport-vip-first-service.com/",
+          "telephone": "+41764630050",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Wehntalerstrasse 188",
+            "addressLocality": "Zürich",
+            "postalCode": "8057",
+            "addressCountry": "CH"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 47.4076,
+            "longitude": 8.5400
+          },
+          "priceRange": "$$$",
+          "description": "Exklusiver Limousinen- und Flughafentransfer in Zürich für VIPs und besondere Anlässe.",
+          "openingHours": "Mo-Su 00:00-23:59",
+          "sameAs": [
+            "https://facebook.com/firstviplimousine",
+            "https://instagram.com/firstviplimousine"
+          ]
+        }
+        </script>
+    <script defer src="index.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="menu-icon" onclick="handleMenuClick()">☰</div>
+        <nav class="menu" id="menu">
+            <a href="index.html" data-key="home">Startseite</a>
+            <a href="about.html" data-key="about">Über uns</a>
+            <a href="services.html" data-key="services">Dienstleistungen</a>
+            <a href="booking.html" data-key="booking">Buchung</a>
+            <a href="vehicles.html" data-key="vehicles">Fahrzeuge</a>
+            <div class="language-switcher">
+                <div class="current-language" onclick="toggleLanguageDropdown()">
+                    <img src="https://flagcdn.com/w40/de.png" alt="Deutsch" id="current-flag">
+                    <span id="current-language-text">Deutsch</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="language-dropdown" id="language-dropdown" style="display: none;">
+                    <div onclick="switchLanguage('de')">
+                        <img src="https://flagcdn.com/w40/de.png" alt="Deutsch"> Deutsch
+                    </div>
+                    <div onclick="switchLanguage('en')">
+                        <img src="https://flagcdn.com/w40/gb.png" alt="English"> English
+                    </div>
+                </div>
+            </div>                                                            
+        </nav>
+        <img class="logo" src="logo_first_vip_limousine.png" alt="First VIP Limousine">
+    </header>
+
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="close-btn" onclick="toggleMobileSidebar()">×</div>    
+        <div class="sidebar-links">
+            <a href="index.html" data-key="home">Startseite</a>
+            <a href="about.html" data-key="about">Über uns</a>
+            <a href="services.html" data-key="services">Dienstleistungen</a>
+            <a href="booking.html" data-key="booking">Buchung</a>
+            <a href="vehicles.html" data-key="vehicles">Fahrzeuge</a>
+        </div>
+        <div class="sidebar-language">
+            <div class="current-language" onclick="toggleLanguageDropdownSidebar()">
+                <img src="https://flagcdn.com/w40/de.png" alt="Deutsch" id="current-flag-sidebar">
+                <span id="current-language-text-sidebar">Deutsch</span>
+                <span class="dropdown-arrow">&#9662;</span>
+            </div>
+            <div class="language-dropdown" id="language-dropdown-sidebar" style="display: none;">
+                <div onclick="switchLanguage('de')">
+                    <img src="https://flagcdn.com/w40/de.png" alt="Deutsch"> Deutsch
+                </div>
+                <div onclick="switchLanguage('en')">
+                    <img src="https://flagcdn.com/w40/gb.png" alt="English"> English
+                </div>
+            </div>
+        </div>        
+        <img src="logo_first_vip_limousine.png" alt="First VIP Limousine" class="sidebar-logo">
+    </div>
+
+    <section class="hero" id="home">
+        <h1 data-key="welcome">First VIP Limousine</h1>
+        <button onclick="window.location.href='booking.html';" data-key="bookNow">Jetzt buchen</button>
+    </section>
+
+    <section class="home" id="why-choose-us">
+        <h2 data-key="whyChooseUs">Warum uns wählen?</h2>
+        <p data-key="whyText1">Exklusive Fahrzeuge und erstklassiger Service für Ihre luxuriösen Fahrten.</p>
+        <p data-key="whyText2">24/7 verfügbar – Pünktlichkeit und Komfort sind unsere Priorität.</p>
+        <p data-key="whyText3">Erleben Sie die höchste Qualität und Eleganz bei jeder Fahrt.</p>
+    </section>    
+
+    <section class="contact-section">
+        <div class="contact-box">
+            <p class="contact-title" data-key="companyName">First VIP Limousine</p>
+            <p data-key="address">Wehntalerstrasse 188</p>
+            <p data-key="city">8057 Zürich</p>
+            <p data-key="phone">Telefon: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a></p>
+            <p data-key="email">E-Mail: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a></p>
+            <a href="https://wa.me/41764630050" class="whatsapp-button" data-key="whatsapp">Auf WhatsApp schreiben</a>
+        </div>
+    </section>
+    <footer>
+        <p>© 2025. All rights reserved by First VIP Limousine.</p>
+    </footer>         
+</body>
+</html>

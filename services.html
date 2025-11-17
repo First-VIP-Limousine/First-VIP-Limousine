@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dienstleistungen - First VIP Limousine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="menu-icon" onclick="handleMenuClick()">☰</div>
+        <nav class="menu" id="menu">
+            <a href="index.html" data-key="home">Startseite</a>
+            <a href="about.html" data-key="about">Über uns</a>
+            <a href="services.html" data-key="services">Dienstleistungen</a>
+            <a href="booking.html" data-key="booking">Buchung</a>
+            <a href="vehicles.html" data-key="vehicles">Fahrzeuge</a>
+            <div class="language-switcher">
+                <div class="current-language" onclick="toggleLanguageDropdown()">
+                    <img src="https://flagcdn.com/w40/de.png" alt="Deutsch" id="current-flag">
+                    <span id="current-language-text">Deutsch</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="language-dropdown" id="language-dropdown" style="display: none;">
+                    <div onclick="switchLanguage('de')">
+                        <img src="https://flagcdn.com/w40/de.png" alt="Deutsch"> Deutsch
+                    </div>
+                    <div onclick="switchLanguage('en')">
+                        <img src="https://flagcdn.com/w40/gb.png" alt="English"> English
+                    </div>
+                </div>
+            </div>                                                            
+        </nav>
+        <img class="logo" src="logo_first_vip_limousine.png" alt="First VIP Limousine">
+    </header>
+
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="close-btn" onclick="toggleMobileSidebar()">×</div>
+        <div class="sidebar-links">
+          <a href="index.html" data-key="home">Startseite</a>
+          <a href="about.html" data-key="about">Über uns</a>
+          <a href="services.html" data-key="services">Dienstleistungen</a>
+          <a href="booking.html" data-key="booking">Buchung</a>
+          <a href="vehicles.html" data-key="vehicles">Fahrzeuge</a>
+        </div>
+        <div class="sidebar-language">
+          <div class="current-language" onclick="toggleLanguageDropdownSidebar()">
+            <img src="https://flagcdn.com/w40/de.png" alt="Deutsch" id="current-flag-sidebar">
+            <span id="current-language-text-sidebar">Deutsch</span>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <div class="language-dropdown" id="language-dropdown-sidebar" style="display: none;">
+            <div onclick="switchLanguage('en')">
+              <img src="https://flagcdn.com/w40/gb.png" alt="English"> English
+            </div>
+          </div>
+        </div>
+        <img src="logo_first_vip_limousine.png" class="sidebar-logo" alt="First VIP Limousine">
+      </div>
+
+    <section class="title-section">
+        <h1 class="main-title" data-key="welcome">First VIP Limousine</h1>
+        <h2 class="subtitle" data-key="servicesTitle">Dienstleistungen</h2>
+        <p class="intro-text" data-key="servicesIntro">
+            Erleben Sie Exzellenz auf höchstem Niveau – unser exklusiver Chauffeurservice garantiert Luxus, Komfort und absolute Zuverlässigkeit.
+        </p>
+    </section>    
+
+    <div class="services-container">
+        <div class="services-left">
+            <div class="service-point">
+                <h3 data-key="servicesScopeTitle">Unser Leistungsspektrum</h3>
+                <p data-key="servicesScope">
+                    Unser Service ist maßgeschneidert für Ihre Bedürfnisse – ob privat oder geschäftlich. 
+                    Genießen Sie Luxus in der Mercedes S - Klasse oder reisen Sie mit bis zu 15 Personen in 
+                    unseren komfortablen Sprintern. Ihr persönlicher Chauffeur sorgt mit höchstem Engagement 
+                    für Ihr Wohlbefinden und spricht Deutsch, Englisch oder Türkisch, um Ihren Aufenthalt so 
+                    angenehm wie möglich zu gestalten.
+                </p>
+            </div>
+            <div class="service-point">
+                <h3 data-key="servicesHighlightTitle">Was uns auszeichnet</h3>
+                <p data-key="servicesHighlight">
+                    Ihre Zufriedenheit ist unsere Priorität. Wir stehen für höchste Qualität und Exzellenz 
+                    in jedem Detail. Unsere erfahrenen Chauffeure garantieren ein stressfreies, luxuriöses 
+                    Erlebnis – mit Pünktlichkeit, Diskretion und absoluter Sicherheit. Lehnen Sie sich entspannt 
+                    zurück und genießen Sie unseren erstklassigen Service.
+                </p>
+            </div>
+        </div>
+    
+        <button class="booking-button" onclick="window.location.href='booking.html';" data-key="bookNow">
+            Jetzt buchen
+        </button>
+    
+        <div class="services-right">
+            <div class="service-point">
+                <h3 data-key="servicesRangeTitle">Unser Leistungsumfang</h3>
+                <p data-key="servicesRange">
+                    Maßgeschneiderter Transport für jede Reise – ob Kurz- oder Langstrecke. 
+                    Genießen Sie unseren zuverlässigen Flughafentransfer oder eine exklusive 
+                    Sightseeing-Tour durch die Schweiz. Mit unserem erstklassigen Limousinenservice 
+                    können Sie sich entspannt zurücklehnen – wir kümmern uns um den Rest.
+                </p>
+            </div>
+            <div class="service-point">
+                <h3 data-key="servicesFullServiceTitle">Rundumservice</h3>
+                <p data-key="servicesFullService">
+                    Mehr als nur Transport – wir übernehmen auch Ihre Reservierungen und organisieren 
+                    besondere Geschenke. Unser Rundumservice sorgt dafür, dass kein Wunsch unerfüllt bleibt.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+<div class="services-mobile">
+    <div class="service-point">
+      <h3 data-key="servicesScopeTitle">Unser Leistungsspektrum</h3>
+      <p data-key="servicesScope">
+        Unser Service ist maßgeschneidert für Ihre Bedürfnisse – ob privat oder geschäftlich. 
+        Genießen Sie Luxus in der Mercedes S - Klasse oder reisen Sie mit bis zu 15 Personen in 
+        unseren komfortablen Sprintern. Ihr persönlicher Chauffeur sorgt mit höchstem Engagement 
+        für Ihr Wohlbefinden und spricht Deutsch, Englisch oder Türkisch.
+      </p>
+    </div>
+  
+    <div class="service-point">
+      <h3 data-key="servicesHighlightTitle">Was uns auszeichnet</h3>
+      <p data-key="servicesHighlight">
+        Ihre Zufriedenheit ist unsere Priorität. Wir stehen für höchste Qualität und Exzellenz 
+        in jedem Detail. Unsere erfahrenen Chauffeure garantieren ein stressfreies, luxuriöses 
+        Erlebnis – mit Pünktlichkeit, Diskretion und absoluter Sicherheit.
+      </p>
+    </div>
+  
+    <div class="mobile-services-image">
+      <div class="image-wrapper">
+        <img src="ueeber_uns.jpg" alt="Limousinenservice" />
+        <button class="booking-button" onclick="window.location.href='booking.html';" data-key="bookNow">
+          Jetzt buchen
+        </button>
+      </div>
+    </div>
+  
+    <div class="service-point">
+      <h3 data-key="servicesRangeTitle">Unser Leistungsumfang</h3>
+      <p data-key="servicesRange">
+        Maßgeschneiderter Transport für jede Reise – ob Kurz- oder Langstrecke. 
+        Genießen Sie unseren zuverlässigen Flughafentransfer oder eine exklusive 
+        Sightseeing-Tour durch die Schweiz.
+      </p>
+    </div>
+  
+    <div class="service-point">
+      <h3 data-key="servicesFullServiceTitle">Rundumservice</h3>
+      <p data-key="servicesFullService">
+        Mehr als nur Transport – wir übernehmen auch Ihre Reservierungen und organisieren 
+        besondere Geschenke. Unser Rundumservice sorgt dafür, dass kein Wunsch unerfüllt bleibt.
+      </p>
+    </div>
+  </div>  
+
+    </section>
+
+    <section class="contact-section">
+        <div class="contact-box">
+            <p class="contact-title" data-key="companyName">First VIP Limousine</p>
+            <p data-key="address">Wehntalerstrasse 188</p>
+            <p data-key="city">8057 Zürich</p>
+            <p data-key="phone">
+                Telefon: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a>
+            </p>
+            <p data-key="email">
+                E-Mail: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a>
+            </p>
+            <a href="https://wa.me/41764630050" class="whatsapp-button" data-key="whatsapp">
+                Auf WhatsApp schreiben
+            </a>
+        </div>
+    </section>    
+
+    <script src="index.js"></script>
+
+    <footer>
+        <p>© 2025. All rights reserved by First VIP Limousine.</p>
+    </footer>
+    
+</body>
+</html>

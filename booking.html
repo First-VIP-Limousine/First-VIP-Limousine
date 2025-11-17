@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-key="booking">Buchung - First VIP Limousine</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="booking.js"></script>
+  <script defer src="index.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <script src="https://maps.googleapis.com/maps/api/js?key=DEIN_API_KEY&libraries=places"></script>
+</head>
+<body>
+  <!-- Navigation -->
+  <header class="header">
+    <div class="menu-icon" onclick="handleMenuClick()">☰</div>
+    <nav class="menu" id="menu">
+      <a href="index.html" data-key="home">Startseite</a>
+      <a href="about.html" data-key="about">Über uns</a>
+      <a href="services.html" data-key="services">Dienstleistungen</a>
+      <a href="booking.html" data-key="booking">Buchung</a>
+      <a href="vehicles.html" data-key="vehicles">Fahrzeuge</a>
+      <div class="language-switcher">
+        <div class="current-language" onclick="toggleLanguageDropdown()">
+          <img src="https://flagcdn.com/w40/de.png" alt="Deutsch" id="current-flag" />
+          <span id="current-language-text">Deutsch</span>
+          <span class="dropdown-arrow">&#9662;</span>
+        </div>
+        <div class="language-dropdown" id="language-dropdown" style="display: none;">
+          <div onclick="switchLanguage('de')">
+            <img src="https://flagcdn.com/w40/de.png" alt="Deutsch" /> Deutsch
+          </div>
+          <div onclick="switchLanguage('en')">
+            <img src="https://flagcdn.com/w40/gb.png" alt="English" /> English
+          </div>
+        </div>
+      </div>
+    </nav>
+    <img class="logo" src="logo_first_vip_limousine.png" alt="First VIP Limousine" />
+  </header>
+
+  <div class="mobile-sidebar" id="mobileSidebar">
+    <div class="close-btn" onclick="toggleMobileSidebar()">×</div>
+    <div class="sidebar-links">
+      <a href="index.html" data-key="home">Startseite</a>
+      <a href="about.html" data-key="about">Über uns</a>
+      <a href="services.html" data-key="services">Dienstleistungen</a>
+      <a href="booking.html" data-key="booking">Buchung</a>
+      <a href="vehicles.html" data-key="vehicles">Fahrzeuge</a>
+    </div>
+    <div class="sidebar-language">
+      <div class="current-language" onclick="toggleLanguageDropdownSidebar()">
+        <img src="https://flagcdn.com/w40/de.png" alt="Deutsch" id="current-flag-sidebar">
+        <span id="current-language-text-sidebar">Deutsch</span>
+        <span class="dropdown-arrow">▼</span>
+      </div>
+      <div class="language-dropdown" id="language-dropdown-sidebar" style="display: none;">
+        <div onclick="switchLanguage('en')">
+          <img src="https://flagcdn.com/w40/gb.png" alt="English"> English
+        </div>
+      </div>
+    </div>
+    <img src="logo_first_vip_limousine.png" class="sidebar-logo" alt="First VIP Limousine">
+  </div>
+
+  <section class="title-section">
+    <h1 class="main-title" data-key="welcome">First VIP Limousine</h1>
+    <h2 class="subtitle" data-key="bookingTitle">Buchung</h2>
+    <p class="intro-text" data-key="bookingIntro">
+      Ihr exklusiver Limousinenservice – Komfort, Pünktlichkeit und Luxus.
+    </p>
+  </section>
+
+  <div class="step-tracker">
+    <span class="step active" data-key="step1">1. Persönliche Informationen</span>
+    <span class="step" data-key="step2">2. Reisedetails</span>
+    <span class="step" data-key="step3">3. Fahrzeugauswahl</span>
+  </div>
+
+  <section class="booking-container">
+    <div class="personal-info-container">
+      <div class="booking-steps">
+        <div class="step" id="step1">
+          <h3 data-key="personalInfo">Persönliche Informationen</h3>
+          <div class="input-row">
+            <div class="input-group">
+              <i class="fa-solid fa-location-dot"></i>
+              <input type="text" id="pickup" placeholder="Abholadresse" data-key="pickupPlaceholder" />
+            </div>
+            <div class="input-group">
+              <i class="fa-solid fa-map-marker-alt"></i>
+              <input type="text" id="destination" placeholder="Zieladresse" data-key="destinationPlaceholder" />
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="input-group">
+              <i class="fa-solid fa-calendar"></i>
+              <input type="date" id="date" />
+            </div>
+            <div class="input-group">
+              <i class="fa-solid fa-clock"></i>
+              <input type="time" id="time" />
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="input-group">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="name" placeholder="Ihr Name" data-key="namePlaceholder" />
+            </div>
+            <div class="input-group">
+              <i class="fa-solid fa-phone"></i>
+              <input type="tel" id="phone" placeholder="Telefonnummer" data-key="phonePlaceholder" />
+            </div>
+          </div>
+          <button class="next-btn" onclick="nextStep(1)" data-key="next">Weiter</button>
+        </div>
+      </div>
+    </div>
+    <div class="step" id="step2" style="display: none;">
+        <h3 data-key="travelDetails">Reisedetails</h3>
+        <div class="reisedetails-container">
+          <div class="reisedetails-group">
+            <label for="passengers" data-key="passengerLabel">Anzahl der Passagiere</label>
+            <div class="select-box">
+              <i class="fa-solid fa-user"></i>
+              <select id="passengers">
+                <option value="" data-key="passengerOption">Wählen Sie die Anzahl</option>
+                <option value="1">1 Passagier</option>
+                <option value="2">2 Passagiere</option>
+                <option value="3">3 Passagiere</option>
+                <option value="4">4 Passagiere</option>
+                <option value="5">5 Passagiere</option>
+                <option value="6">6 Passagiere</option>
+              </select>
+            </div>
+          </div>
+          <div class="reisedetails-group">
+            <label for="luggage" data-key="luggageLabel">Anzahl der Gepäckstücke</label>
+            <div class="select-box">
+              <i class="fa-solid fa-suitcase"></i>
+              <select id="luggage">
+                <option value="" data-key="luggageOption">Wählen Sie die Anzahl</option>
+                <option value="0">0 Gepäckstücke</option>
+                <option value="1">1 Gepäckstück</option>
+                <option value="2">2 Gepäckstücke</option>
+                <option value="3">3 Gepäckstücke</option>
+                <option value="4">4 Gepäckstücke</option>
+                <option value="5">5 Gepäckstücke</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="button-group">
+          <button class="back-btn" onclick="prevStep(2)" data-key="back">Zurück</button>
+          <button class="next-btn" onclick="nextStep(2)" data-key="next">Weiter</button>
+        </div>
+      </div>
+  
+      <div id="step3" class="step" style="display: none;">
+        <h2 data-key="vehicleSelection">Wählen Sie Ihr Fahrzeug</h2>
+        <div class="fahrzeugauswahl-container">
+          <div class="fahrzeug-option" data-car="First Class" onclick="selectCar('First Class')">
+            <img src="background_startseite.jpg" alt="First Class" />
+            <span class="fahrzeug-label" data-key="firstClass">First Class</span>
+            <p data-key="priceFirst">Pro km 5.00 CHF</p>
+          </div>
+          <div class="fahrzeug-option" data-car="Business VAN" onclick="selectCar('Business VAN')">
+            <img src="bildfahrzeugeV250.jpg" alt="Business Van" />
+            <span class="fahrzeug-label" data-key="businessVan">Business VAN</span>
+            <p data-key="priceVan">Pro km 5.00 CHF</p>
+          </div>
+        </div>
+  
+        <div class="recaptcha-container">
+          <div class="g-recaptcha" data-sitekey="6LcBk5cqAAAAAPrDhDTb3N4VmvS8I1IhGd5ZooPm"></div>
+        </div>
+  
+        <div class="button-group">
+          <button class="back-btn" onclick="prevStep(3)" data-key="back">Zurück</button>
+          <button class="next-btn" onclick="sendBooking()" data-key="submitBooking">Buchung senden</button>
+        </div>
+  
+        <div id="result-box"></div>
+      </div>
+  
+      <div class="info-box">
+        <h2 data-key="whyChooseUs">Warum sollten Sie sich für uns entscheiden?</h2>
+        <div class="info-point">
+          <i class="fas fa-gem"></i>
+          <p><strong data-key="luxury">Luxus pur:</strong> <span data-key="luxuryText">Erleben Sie höchste Eleganz und Komfort mit unseren Premium-Fahrzeugen.</span></p>
+        </div>
+        <div class="info-point">
+          <i class="fas fa-clock"></i>
+          <p><strong data-key="punctuality">Pünktlichkeit garantiert:</strong> <span data-key="punctualityText">Verlassen Sie sich auf absolute Zuverlässigkeit – wir sind immer zur richtigen Zeit am richtigen Ort.</span></p>
+        </div>
+        <div class="info-point">
+          <i class="fas fa-user-shield"></i>
+          <p><strong data-key="security">Diskretion & Sicherheit:</strong> <span data-key="securityText">Unsere erfahrenen Chauffeure bieten Ihnen höchste Privatsphäre und ein sicheres Gefühl während der gesamten Fahrt.</span></p>
+        </div>
+      </div>
+    </section>
+  
+    <section class="contact-section">
+      <div class="contact-box">
+        <p class="contact-title" data-key="companyName">First VIP Limousine</p>
+        <p data-key="address">Wehntalerstrasse 188</p>
+        <p data-key="city">8057 Zürich</p>
+        <p data-key="phone">Telefon: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a></p>
+        <p data-key="email">E-Mail: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a></p>
+        <a href="https://wa.me/41764630050" class="whatsapp-button" data-key="whatsapp">Auf WhatsApp schreiben</a>
+      </div>
+    </section>
+  
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const savedLanguage = localStorage.getItem("language") || "de";
+        switchLanguage(savedLanguage);
+      });
+    </script>
+  <footer>
+    <p>© 2025. All rights reserved by First VIP Limousine.</p>
+  </footer>
+  </body>
+  </html>
