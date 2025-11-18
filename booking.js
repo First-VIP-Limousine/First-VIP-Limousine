@@ -14,21 +14,19 @@ let currentStep = 1;
 let selectedCar = null;
 
 // -----------------------------------------------------------------------------
-// Init
+// DOMContentLoaded
 // -----------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
+  // Fahrzeug aus URL wählen
   const urlParams = new URLSearchParams(window.location.search);
   const selectedVehicle = urlParams.get('vehicle');
   if (selectedVehicle) {
     selectCar(selectedVehicle);
   }
 
-  // Standard ist Deutsch (steht so im HTML).
-  // Nur wenn etwas anderes gespeichert ist (z.B. 'en'), umschalten.
-  const lang = getLang();
-  if (lang !== 'de') {
-    switchLanguage(lang);
-  }
+  // gespeicherte Sprache anwenden (wie auf "Über uns")
+  const savedLanguage = localStorage.getItem('language') || 'de';
+  switchLanguage(savedLanguage);
 });
 
 // -----------------------------------------------------------------------------
@@ -280,7 +278,7 @@ function updateStepTracker(activeStep) {
 }
 
 // -----------------------------------------------------------------------------
-// Übersetzungen (EXAKT wie dein alter Code)
+// Übersetzungen (analog zu "Über uns", aber für Buchungsseite)
 // -----------------------------------------------------------------------------
 const translations = {
   de: {
@@ -321,10 +319,11 @@ const translations = {
     priceVan: 'Pro km 5.00 CHF',
     submitBooking: 'Buchung senden',
 
-    // Infobox
+    // Info-Box (rechte gelbe Box)
     whyChooseUs: 'Warum sollten Sie sich für uns entscheiden?',
     luxury: 'Luxus pur:',
-    luxuryText: 'Erleben Sie höchste Eleganz und Komfort mit unseren Premium-Fahrzeugen.',
+    luxuryText:
+      'Erleben Sie höchste Eleganz und Komfort mit unseren Premium-Fahrzeugen.',
     punctuality: 'Pünktlichkeit garantiert:',
     punctualityText:
       'Verlassen Sie sich auf absolute Zuverlässigkeit – wir sind immer zur richtigen Zeit am richtigen Ort.',
@@ -332,14 +331,15 @@ const translations = {
     securityText:
       'Unsere erfahrenen Chauffeure bieten Ihnen höchste Privatsphäre und ein sicheres Gefühl während der gesamten Fahrt.',
 
-    // Kontaktbox
+    // Kontaktbox unten
     companyName: 'First VIP Limousine',
     address: 'Wehntalerstrasse 188',
     city: '8057 Zürich',
-    phone: 'Telefon: +41 76 463 00 50',
-    email: 'E-Mail: info@ulas-vip.com',
+    phone: 'Telefon: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a>',
+    email: 'E-Mail: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a>',
     whatsapp: 'Auf WhatsApp schreiben',
 
+    // Fehlermeldungen etc.
     errorTitle: 'Fehler',
     errorFillAllFields: 'Bitte füllen Sie alle Felder aus.',
     errorSelectCar: 'Bitte wählen Sie ein Fahrzeug aus.',
@@ -363,7 +363,8 @@ const translations = {
     vehicles: 'Vehicles',
     welcome: 'First VIP Limousine',
     bookingTitle: 'Booking',
-    bookingIntro: 'Your exclusive limousine service – comfort, punctuality, and luxury.',
+    bookingIntro:
+      'Your exclusive limousine service – comfort, punctuality, and luxury.',
     step1: '1. Personal Information',
     step2: '2. Travel Details',
     step3: '3. Vehicle Selection',
@@ -395,7 +396,8 @@ const translations = {
     // Info box
     whyChooseUs: 'Why should you choose us?',
     luxury: 'Pure Luxury:',
-    luxuryText: 'Experience the highest elegance and comfort with our premium vehicles.',
+    luxuryText:
+      'Experience the highest elegance and comfort with our premium vehicles.',
     punctuality: 'Punctuality Guaranteed:',
     punctualityText:
       'Rely on absolute dependability – we’re always at the right place at the right time.',
@@ -407,8 +409,8 @@ const translations = {
     companyName: 'First VIP Limousine',
     address: 'Wehntalerstrasse 188',
     city: '8057 Zurich',
-    phone: 'Phone: +41 76 463 00 50',
-    email: 'Email: info@ulas-vip.com',
+    phone: 'Phone: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a>',
+    email: 'Email: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a>',
     whatsapp: 'Contact via WhatsApp',
 
     errorTitle: 'Error',
@@ -428,7 +430,7 @@ const translations = {
 };
 
 // -----------------------------------------------------------------------------
-// Sprache (wie früher)
+// Sprache – wie auf "Über uns", plus Platzhalter/Selects
 // -----------------------------------------------------------------------------
 function getLang() {
   const stored = localStorage.getItem('language') || 'de';
@@ -449,34 +451,38 @@ function toggleLanguageDropdown() {
 }
 
 function switchLanguage(lang) {
+  if (!translations[lang]) lang = 'de';
+
   localStorage.setItem('language', lang);
   document.documentElement.lang = lang;
 
+  // alle data-key Elemente wie bei "Über uns"
   document.querySelectorAll('[data-key]').forEach(element => {
     const key = element.getAttribute('data-key');
     if (translations[lang][key]) {
-      if (key === 'phone') {
-        element.innerHTML =
-          lang === 'de'
-            ? 'Telefon: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a>'
-            : 'Phone: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a>';
-      } else if (key === 'email') {
-        element.innerHTML =
-          lang === 'de'
-            ? 'E-Mail: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a>'
-            : 'Email: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a>';
-      } else {
-        element.textContent = translations[lang][key];
-      }
+      element.innerHTML = translations[lang][key];
     }
   });
 
-  document.getElementById('pickup').placeholder = translations[lang]['pickupPlaceholder'];
-  document.getElementById('destination').placeholder =
-    translations[lang]['destinationPlaceholder'];
-  document.getElementById('name').placeholder = translations[lang]['namePlaceholder'];
-  document.getElementById('phone').placeholder = translations[lang]['phonePlaceholder'];
+  // Platzhalter
+  if (document.getElementById('pickup')) {
+    document.getElementById('pickup').placeholder =
+      translations[lang]['pickupPlaceholder'];
+  }
+  if (document.getElementById('destination')) {
+    document.getElementById('destination').placeholder =
+      translations[lang]['destinationPlaceholder'];
+  }
+  if (document.getElementById('name')) {
+    document.getElementById('name').placeholder =
+      translations[lang]['namePlaceholder'];
+  }
+  if (document.getElementById('phone')) {
+    document.getElementById('phone').placeholder =
+      translations[lang]['phonePlaceholder'];
+  }
 
+  // Select-Optionen Passagiere
   const passengerSelect = document.getElementById('passengers');
   if (passengerSelect) {
     passengerSelect.innerHTML = `
@@ -490,6 +496,7 @@ function switchLanguage(lang) {
     `;
   }
 
+  // Select-Optionen Gepäck
   const luggageSelect = document.getElementById('luggage');
   if (luggageSelect) {
     luggageSelect.innerHTML = `
@@ -503,17 +510,24 @@ function switchLanguage(lang) {
     `;
   }
 
+  // Flaggen & Text oben
   const flag =
     lang === 'de'
       ? 'https://flagcdn.com/w40/de.png'
       : 'https://flagcdn.com/w40/gb.png';
   const languageText = lang === 'de' ? 'Deutsch' : 'English';
 
-  document.getElementById('current-flag').src = flag;
-  document.getElementById('current-language-text').textContent = languageText;
-  document.getElementById('language-dropdown').style.display = 'none';
-  document.querySelector('.dropdown-arrow').style.transform = 'rotate(0deg)';
+  const currentFlag = document.getElementById('current-flag');
+  const currentLangText = document.getElementById('current-language-text');
+  if (currentFlag) currentFlag.src = flag;
+  if (currentLangText) currentLangText.textContent = languageText;
 
+  const dropdown = document.getElementById('language-dropdown');
+  if (dropdown) dropdown.style.display = 'none';
+  const arrow = document.querySelector('.dropdown-arrow');
+  if (arrow) arrow.style.transform = 'rotate(0deg)';
+
+  // Sidebar-Sprachen
   const flagSidebar = document.getElementById('current-flag-sidebar');
   const textSidebar = document.getElementById('current-language-text-sidebar');
   const dropdownSidebar = document.getElementById('language-dropdown-sidebar');
@@ -538,6 +552,7 @@ function switchLanguage(lang) {
     dropdownSidebar.style.display = 'none';
   }
 
+  // Sidebar auf Mobile schließen
   if (window.innerWidth <= 768) {
     const sidebar = document.getElementById('mobileSidebar');
     if (sidebar) sidebar.classList.remove('open');
@@ -587,4 +602,3 @@ window.handleMenuClick = handleMenuClick;
 window.toggleMobileSidebar = toggleMobileSidebar;
 window.toggleLanguageDropdownSidebar = toggleLanguageDropdownSidebar;
 window.toggleMenu = toggleMenu;
-
