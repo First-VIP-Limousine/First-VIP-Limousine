@@ -281,7 +281,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // gespeicherte Sprache anwenden
   const lang = getLang();
+  document.documentElement.lang = lang;
   applyBookingTranslations(lang);
+
+  // ---------------------------------------------------------
+  // Brücke: Sprachwechsel von index.js um Buchung erweitern
+  // ---------------------------------------------------------
+  const baseSwitchLanguage = window.switchLanguage;
+
+  window.switchLanguage = function (newLang) {
+    // Falsche Werte absichern
+    if (!translations[newLang]) {
+      newLang = 'de';
+    }
+
+    // 1. Globale Sprachlogik (Navigation, Header, Footer, andere Seiten)
+    if (typeof baseSwitchLanguage === 'function') {
+      baseSwitchLanguage(newLang);
+    } else {
+      // Fallback, falls index.js aus irgendeinem Grund nicht geladen ist
+      localStorage.setItem('language', newLang);
+      document.documentElement.lang = newLang;
+    }
+
+    // 2. Buchungs-spezifische Übersetzungen (alle Steps, Platzhalter, Info-Box, Kontakt)
+    applyBookingTranslations(newLang);
+  };
 });
 
 // -----------------------------------------------------------------------------
@@ -580,4 +605,5 @@ window.selectCar = selectCar;
 // Nur die Buchungs-Übersetzungen global machen.
 // Die zentrale Sprachlogik kommt aus index.js (switchLanguage).
 window.applyBookingTranslations = applyBookingTranslations;
+
 
