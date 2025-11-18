@@ -269,31 +269,6 @@ function applyBookingTranslations(lang) {
 }
 
 // -----------------------------------------------------------------------------
-// Sprachwechsel-Funktion (wird vom HTML onclick aufgerufen)
-// -----------------------------------------------------------------------------
-function switchLanguage(lang) {
-  if (!translations[lang]) {
-    lang = 'de';
-  }
-  localStorage.setItem('language', lang);
-  document.documentElement.lang = lang;
-
-  applyBookingTranslations(lang);
-
-  // Menü auf Mobile ggf. schließen
-  if (window.innerWidth <= 768) {
-    const sidebar = document.getElementById('mobileSidebar');
-    if (sidebar) sidebar.classList.remove('open');
-  }
-
-  // Dropdown oben schließen
-  const dropdown = document.getElementById('language-dropdown');
-  const arrow = document.querySelector('.dropdown-arrow');
-  if (dropdown) dropdown.style.display = 'none';
-  if (arrow) arrow.style.transform = 'rotate(0deg)';
-}
-
-// -----------------------------------------------------------------------------
 // DOMContentLoaded
 // -----------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
@@ -601,20 +576,7 @@ window.prevStep = prevStep;
 window.sendBooking = sendBooking;
 window.selectCar = selectCar;
 
-// ---------------------------------------------------------
-// Sprachwechsel: globale Funktion um Buchung erweitern
-// ---------------------------------------------------------
-const baseSwitchLanguage = window.switchLanguage;
-
-window.switchLanguage = function (lang) {
-  // 1. normale Übersetzung (Navigation, Header, Footer, etc.)
-  if (typeof baseSwitchLanguage === 'function') {
-    baseSwitchLanguage(lang);
-  }
-
-  // 2. komplette Buchungsseite (Steps, Platzhalter, Selects, Info-Box, Kontakt)
-  applyBookingTranslations(lang);
-};
-
-// Booking-spezifische Übersetzungsfunktion zusätzlich global verfügbar machen
+// Booking-spezifische Übersetzungsfunktion global machen.
+// Der eigentliche Sprachwechsel (EN/DE) kommt komplett aus index.js.
 window.applyBookingTranslations = applyBookingTranslations;
+
