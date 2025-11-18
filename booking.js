@@ -601,9 +601,7 @@ window.prevStep = prevStep;
 window.sendBooking = sendBooking;
 window.selectCar = selectCar;
 
-window.switchLanguage = switchLanguage;
-window.toggleLanguageDropdown = toggleLanguageDropdown;
-window.handleMenuClick = handleMenuClick;
-window.toggleMobileSidebar = toggleMobileSidebar;
-window.toggleLanguageDropdownSidebar = toggleLanguageDropdownSidebar;
-window.toggleMenu = toggleMenu;
+// Booking-spezifische Übersetzungsfunktion global machen,
+// damit index.js sie bei Sprachwechsel ebenfalls ausführen kann.
+window.applyBookingTranslations = applyBookingTranslations;
+
