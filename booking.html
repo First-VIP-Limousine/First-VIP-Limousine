@@ -212,13 +212,21 @@
     </section>
   
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const savedLanguage = localStorage.getItem("language") || "de";
-        switchLanguage(savedLanguage);
-      });
-    </script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedLanguage = localStorage.getItem("language") || "de";
+
+    if (window.switchLanguage) {
+      window.switchLanguage(savedLanguage);
+    } else if (window.applyBookingTranslations) {
+      // Fallback: nur Buchungsübersetzungen anwenden
+      window.applyBookingTranslations(savedLanguage);
+      document.documentElement.lang = savedLanguage;
+    }
+  });
+</script>
   <footer>
     <p>© 2025. All rights reserved by First VIP Limousine.</p>
   </footer>
   </body>
+
   </html>
