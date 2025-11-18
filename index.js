@@ -110,10 +110,20 @@ function switchLanguage(lang) {
         }
     });
 
+    // >>> NEU: Falls die Buchungsseite eine eigene Übersetzungsfunktion hat, mit aufrufen
+    if (typeof window.applyBookingTranslations === 'function') {
+        window.applyBookingTranslations(lang);
+    }
+
     const flag = lang === 'de'
         ? 'https://flagcdn.com/w40/de.png'
         : 'https://flagcdn.com/w40/gb.png';
     const languageText = lang === 'de' ? 'Deutsch' : 'English';
+
+    document.getElementById('current-flag').src = flag;
+    document.getElementById('current-language-text').textContent = languageText;
+    ...
+}
 
     document.getElementById('current-flag').src = flag;
     document.getElementById('current-language-text').textContent = languageText;
@@ -186,4 +196,5 @@ function toggleLanguageDropdownSidebar() {
         dropdown.style.display = 'block';
         arrow.style.transform = 'rotate(180deg)';
     }
+
 }
