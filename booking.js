@@ -269,6 +269,43 @@ function applyBookingTranslations(lang) {
 }
 
 // -----------------------------------------------------------------------------
+// Sprachwechsel-Funktion (nur für die Buchungsseite)
+// -----------------------------------------------------------------------------
+function switchLanguage(lang) {
+  // Falls etwas Ungültiges reinkommt -> auf Deutsch zurückfallen
+  if (!translations[lang]) {
+    lang = 'de';
+  }
+
+  // Sprache speichern und im <html>-Tag setzen
+  localStorage.setItem('language', lang);
+  document.documentElement.lang = lang;
+
+  // Alle Texte, Platzhalter, Select-Optionen, Flaggen usw. auf dieser Seite neu setzen
+  applyBookingTranslations(lang);
+
+  // Desktop-Dropdown schließen
+  const dropdown = document.getElementById('language-dropdown');
+  const arrow = document.querySelector('.dropdown-arrow');
+  if (dropdown) dropdown.style.display = 'none';
+  if (arrow) arrow.style.transform = 'rotate(0deg)';
+
+  // Sidebar-Dropdown schließen
+  const dropdownSidebar = document.getElementById('language-dropdown-sidebar');
+  const arrowSidebar = dropdownSidebar
+    ? dropdownSidebar.previousElementSibling.querySelector('.dropdown-arrow')
+    : null;
+  if (dropdownSidebar) dropdownSidebar.style.display = 'none';
+  if (arrowSidebar) arrowSidebar.style.transform = 'rotate(0deg)';
+
+  // Auf Mobile die Sidebar nach Sprachwechsel schließen
+  if (window.innerWidth <= 768) {
+    const sidebar = document.getElementById('mobileSidebar');
+    if (sidebar) sidebar.classList.remove('open');
+  }
+}
+
+// -----------------------------------------------------------------------------
 // DOMContentLoaded
 // -----------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
@@ -585,5 +622,5 @@ window.toggleMenu = toggleMenu;
 
 // Optional, falls du sie woanders mal brauchst:
 window.applyBookingTranslations = applyBookingTranslations;
-window.switchLanguage = switchLanguage;
+
 
