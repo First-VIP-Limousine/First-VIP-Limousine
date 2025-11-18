@@ -601,7 +601,20 @@ window.prevStep = prevStep;
 window.sendBooking = sendBooking;
 window.selectCar = selectCar;
 
-// Booking-spezifische Übersetzungsfunktion global machen,
-// damit index.js sie bei Sprachwechsel ebenfalls ausführen kann.
-window.applyBookingTranslations = applyBookingTranslations;
+// ---------------------------------------------------------
+// Sprachwechsel: globale Funktion um Buchung erweitern
+// ---------------------------------------------------------
+const baseSwitchLanguage = window.switchLanguage;
 
+window.switchLanguage = function (lang) {
+  // 1. normale Übersetzung (Navigation, Header, Footer, etc.)
+  if (typeof baseSwitchLanguage === 'function') {
+    baseSwitchLanguage(lang);
+  }
+
+  // 2. komplette Buchungsseite (Steps, Platzhalter, Selects, Info-Box, Kontakt)
+  applyBookingTranslations(lang);
+};
+
+// Booking-spezifische Übersetzungsfunktion zusätzlich global verfügbar machen
+window.applyBookingTranslations = applyBookingTranslations;
