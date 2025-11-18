@@ -14,271 +14,7 @@ let currentStep = 1;
 let selectedCar = null;
 
 // -----------------------------------------------------------------------------
-// DOMContentLoaded
-// -----------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
-  // Fahrzeug aus URL wählen
-  const urlParams = new URLSearchParams(window.location.search);
-  const selectedVehicle = urlParams.get('vehicle');
-  if (selectedVehicle) {
-    selectCar(selectedVehicle);
-  }
-
-  // gespeicherte Sprache anwenden (wie auf "Über uns")
-  const savedLanguage = localStorage.getItem('language') || 'de';
-  switchLanguage(savedLanguage);
-});
-
-// -----------------------------------------------------------------------------
-// Step-Handling
-// -----------------------------------------------------------------------------
-function nextStep(step) {
-  if (!validateStep(step)) return;
-  document.getElementById(`step${step}`).style.display = 'none';
-  const nextStepId = step + 1;
-  if (document.getElementById(`step${nextStepId}`)) {
-    document.getElementById(`step${nextStepId}`).style.display = 'block';
-    updateStepTracker(nextStepId);
-    currentStep = nextStepId;
-  }
-}
-
-function prevStep(step) {
-  document.getElementById(`step${step}`).style.display = 'none';
-  const prevStepId = step - 1;
-  if (prevStepId > 0) {
-    document.getElementById(`step${prevStepId}`).style.display = 'block';
-    updateStepTracker(prevStepId);
-    currentStep = prevStepId;
-  }
-}
-
-function selectCar(carName) {
-  selectedCar = carName;
-  document.querySelectorAll('.fahrzeug-option').forEach(option => {
-    option.style.border = '2px solid transparent';
-    if (option.querySelector('.fahrzeug-label').innerText === carName) {
-      option.style.border = '3px solid gold';
-    }
-  });
-}
-
-// -----------------------------------------------------------------------------
-// Buchung an Supabase senden
-// -----------------------------------------------------------------------------
-async function sendBooking() {
-  const lang = getLang();
-  const t = translations[lang];
-
-  // alle Schritte noch einmal prüfen
-  if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
-    return;
-  }
-
-  const name = document.getElementById('name').value;
-  const phone = document.getElementById('phone').value;
-  const pickup = document.getElementById('pickup').value;
-  const destination = document.getElementById('destination').value;
-  const date = document.getElementById('date').value;
-  const time = document.getElementById('time').value;
-  const passengers = parseInt(document.getElementById('passengers').value || '0', 10);
-  const luggage = document.getElementById('luggage').value;
-
-  // optionale Felder (können im HTML fehlen)
-  const emailInput = document.getElementById('email');
-  const email = emailInput ? emailInput.value : '';
-
-  const messageInput = document.getElementById('message');
-  const message = messageInput ? messageInput.value : '';
-
-  const carValue = selectedCar || '';
-
-  try {
-    const { error } = await supabase.from('bookings').insert([
-      {
-        name,
-        email,
-        phone,
-        pickup,
-        destination,
-        pickup_date: date,
-        pickup_time: time,
-        passengers,
-        luggage,
-        car: carValue,
-        message
-      }
-    ]);
-
-    if (error) {
-      console.error('Supabase insert error:', error);
-      showErrorPopup(t.errorTitle, t.errorSend);
-      return;
-    }
-
-    showSuccessPopup(t.successTitle, t.successMessage);
-
-    const form = document.querySelector('form');
-    if (form) form.reset();
-
-    document.getElementById('step2').style.display = 'none';
-    document.getElementById('step3').style.display = 'none';
-    document.getElementById('step1').style.display = 'block';
-    currentStep = 1;
-    updateStepTracker(1);
-  } catch (err) {
-    console.error('Supabase connection error:', err);
-    showErrorPopup(t.errorTitle, t.errorConnection + (err.message || err.toString()));
-  }
-}
-
-// -----------------------------------------------------------------------------
-// Validierung der Schritte
-// -----------------------------------------------------------------------------
-function validateStep(step) {
-  const lang = getLang();
-  const t = translations[lang];
-
-  if (step === 1) {
-    const pickup = document.getElementById('pickup').value.trim();
-    const destination = document.getElementById('destination').value.trim();
-    const date = document.getElementById('date').value;
-    const time = document.getElementById('time').value;
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-
-    if (!pickup || !destination || !date || !time || !name || !phone) {
-      showErrorPopup(t.errorTitle, t.errorFillAllFields);
-      return false;
-    }
-  }
-
-  if (step === 2) {
-    const passengers = document.getElementById('passengers').value;
-    const luggage = document.getElementById('luggage').value;
-
-    if (!passengers || !luggage) {
-      showErrorPopup(t.errorTitle, t.errorFillAllFields);
-      return false;
-    }
-  }
-
-  if (step === 3) {
-    const passengers = parseInt(document.getElementById('passengers').value) || 0;
-    const luggage = parseInt(document.getElementById('luggage').value) || 0;
-
-    if (!selectedCar) {
-      showErrorPopup(t.errorTitle, t.errorSelectCar);
-      return false;
-    }
-
-    if (selectedCar === 'First Class' && (passengers > 3 || luggage > 3)) {
-      selectCar('Business VAN');
-      selectedCar = 'Business VAN';
-      showWarningPopup(t.warningTitle, t.warningMessage);
-      return false;
-    }
-
-    if (typeof grecaptcha !== 'undefined' && !grecaptcha.getResponse()) {
-      showErrorPopup(t.errorTitle, t.errorCaptcha);
-      return false;
-    }
-  }
-
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-// Popups
-// -----------------------------------------------------------------------------
-function showSuccessPopup(title, message) {
-  const oldPopup = document.querySelector('.success-popup');
-  if (oldPopup) oldPopup.remove();
-
-  let popup = document.createElement('div');
-  popup.classList.add('success-popup');
-
-  popup.innerHTML = `
-        <div class="success-popup-content">
-            <span class="success-icon">✔</span>
-            <h2>${title}</h2>
-            <p>${message}</p>
-            <button id="success-ok-btn">OK</button>
-        </div>
-    `;
-  document.body.appendChild(popup);
-
-  document.getElementById('success-ok-btn').addEventListener('click', () => {
-    window.location.href = 'index.html';
-  });
-
-  setTimeout(() => {
-    window.location.href = 'index.html';
-  }, 3000);
-}
-
-function closeSuccessPopup() {
-  let popup = document.querySelector('.success-popup');
-  if (popup) {
-    popup.remove();
-  }
-}
-
-function showErrorPopup(title, message) {
-  let popup = document.createElement('div');
-  popup.classList.add('error-popup');
-
-  popup.innerHTML = `
-        <div class="error-popup-content">
-            <span class="error-icon">✖</span>
-            <h2>${title}</h2>
-            <p>${message}</p>
-            <button class="error-ok-btn">OK</button>
-        </div>
-    `;
-  document.body.appendChild(popup);
-
-  popup.querySelector('.error-ok-btn').addEventListener('click', () => {
-    popup.remove();
-  });
-}
-
-function showWarningPopup(title, message) {
-  let popup = document.createElement('div');
-  popup.classList.add('warning-popup');
-
-  popup.innerHTML = `
-        <div class="warning-popup-content">
-            <span class="warning-icon">⚠</span>
-            <h2>${title}</h2>
-            <p>${message}</p>
-            <button class="warning-ok-btn">OK</button>
-        </div>
-    `;
-  document.body.appendChild(popup);
-
-  popup.querySelector('.warning-ok-btn').addEventListener('click', () => {
-    popup.remove();
-  });
-}
-
-// -----------------------------------------------------------------------------
-// Menü & Step-Tracker
-// -----------------------------------------------------------------------------
-function toggleMenu() {
-  const menu = document.getElementById('menu');
-  menu.classList.toggle('open');
-}
-
-function updateStepTracker(activeStep) {
-  let steps = document.querySelectorAll('.step');
-  steps.forEach((step, index) => {
-    step.classList.toggle('active', index + 1 === activeStep);
-  });
-}
-
-// -----------------------------------------------------------------------------
-// Übersetzungen (analog zu "Über uns", aber für Buchungsseite)
+// Translations nur für diese Seite
 // -----------------------------------------------------------------------------
 const translations = {
   de: {
@@ -319,11 +55,10 @@ const translations = {
     priceVan: 'Pro km 5.00 CHF',
     submitBooking: 'Buchung senden',
 
-    // Info-Box (rechte gelbe Box)
+    // Info-Box
     whyChooseUs: 'Warum sollten Sie sich für uns entscheiden?',
     luxury: 'Luxus pur:',
-    luxuryText:
-      'Erleben Sie höchste Eleganz und Komfort mit unseren Premium-Fahrzeugen.',
+    luxuryText: 'Erleben Sie höchste Eleganz und Komfort mit unseren Premium-Fahrzeugen.',
     punctuality: 'Pünktlichkeit garantiert:',
     punctualityText:
       'Verlassen Sie sich auf absolute Zuverlässigkeit – wir sind immer zur richtigen Zeit am richtigen Ort.',
@@ -331,15 +66,17 @@ const translations = {
     securityText:
       'Unsere erfahrenen Chauffeure bieten Ihnen höchste Privatsphäre und ein sicheres Gefühl während der gesamten Fahrt.',
 
-    // Kontaktbox unten
+    // Kontaktbox
     companyName: 'First VIP Limousine',
     address: 'Wehntalerstrasse 188',
     city: '8057 Zürich',
-    phone: 'Telefon: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a>',
-    email: 'E-Mail: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a>',
+    phone:
+      'Telefon: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a>',
+    email:
+      'E-Mail: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a>',
     whatsapp: 'Auf WhatsApp schreiben',
 
-    // Fehlermeldungen etc.
+    // Fehlermeldungen
     errorTitle: 'Fehler',
     errorFillAllFields: 'Bitte füllen Sie alle Felder aus.',
     errorSelectCar: 'Bitte wählen Sie ein Fahrzeug aus.',
@@ -409,8 +146,10 @@ const translations = {
     companyName: 'First VIP Limousine',
     address: 'Wehntalerstrasse 188',
     city: '8057 Zurich',
-    phone: 'Phone: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a>',
-    email: 'Email: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a>',
+    phone:
+      'Phone: <a class="contact-link" href="tel:+41764630050">+41 76 463 00 50</a>',
+    email:
+      'Email: <a class="contact-link" href="mailto:info@ulas-vip.com">info@ulas-vip.com</a>',
     whatsapp: 'Contact via WhatsApp',
 
     errorTitle: 'Error',
@@ -430,69 +169,54 @@ const translations = {
 };
 
 // -----------------------------------------------------------------------------
-// Sprache – wie auf "Über uns", plus Platzhalter/Selects
+// Helper: Sprache
 // -----------------------------------------------------------------------------
 function getLang() {
   const stored = localStorage.getItem('language') || 'de';
   return translations[stored] ? stored : 'de';
 }
 
-function toggleLanguageDropdown() {
-  const dropdown = document.getElementById('language-dropdown');
-  const arrow = document.querySelector('.dropdown-arrow');
+// wendet nur die Texte / Platzhalter / Select-Optionen für diese Seite an
+function applyBookingTranslations(lang) {
+  const t = translations[lang];
 
-  if (dropdown.style.display === 'block') {
-    dropdown.style.display = 'none';
-    arrow.style.transform = 'rotate(0deg)';
-  } else {
-    dropdown.style.display = 'block';
-    arrow.style.transform = 'rotate(180deg)';
-  }
-}
+  // alle data-key Elemente
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.getAttribute('data-key');
+    const value = t[key];
+    if (!value) return;
 
-function switchLanguage(lang) {
-  if (!translations[lang]) lang = 'de';
+    // Inputs bekommen keinen innerHTML, sondern placeholder separat
+    if (el.tagName === 'INPUT') return;
 
-  localStorage.setItem('language', lang);
-  document.documentElement.lang = lang;
-
-  // alle data-key Elemente wie bei "Über uns"
-  document.querySelectorAll('[data-key]').forEach(element => {
-    const key = element.getAttribute('data-key');
-    if (translations[lang][key]) {
-      element.innerHTML = translations[lang][key];
-    }
+    el.innerHTML = value;
   });
 
-  // Platzhalter
-  if (document.getElementById('pickup')) {
-    document.getElementById('pickup').placeholder =
-      translations[lang]['pickupPlaceholder'];
-  }
-  if (document.getElementById('destination')) {
-    document.getElementById('destination').placeholder =
-      translations[lang]['destinationPlaceholder'];
-  }
-  if (document.getElementById('name')) {
-    document.getElementById('name').placeholder =
-      translations[lang]['namePlaceholder'];
-  }
-  if (document.getElementById('phone')) {
-    document.getElementById('phone').placeholder =
-      translations[lang]['phonePlaceholder'];
-  }
+  // Platzhalter für Inputs
+  const pickup = document.getElementById('pickup');
+  if (pickup && t.pickupPlaceholder) pickup.placeholder = t.pickupPlaceholder;
+
+  const destination = document.getElementById('destination');
+  if (destination && t.destinationPlaceholder)
+    destination.placeholder = t.destinationPlaceholder;
+
+  const name = document.getElementById('name');
+  if (name && t.namePlaceholder) name.placeholder = t.namePlaceholder;
+
+  const phone = document.getElementById('phone');
+  if (phone && t.phonePlaceholder) phone.placeholder = t.phonePlaceholder;
 
   // Select-Optionen Passagiere
   const passengerSelect = document.getElementById('passengers');
   if (passengerSelect) {
     passengerSelect.innerHTML = `
-        <option value="">${translations[lang]['passengerOption']}</option>
-        <option value="1">1 ${lang === 'de' ? 'Passagier' : 'passenger'}</option>
-        <option value="2">2 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
-        <option value="3">3 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
-        <option value="4">4 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
-        <option value="5">5 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
-        <option value="6">6 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
+      <option value="">${t.passengerOption}</option>
+      <option value="1">1 ${lang === 'de' ? 'Passagier' : 'passenger'}</option>
+      <option value="2">2 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
+      <option value="3">3 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
+      <option value="4">4 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
+      <option value="5">5 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
+      <option value="6">6 ${lang === 'de' ? 'Passagiere' : 'passengers'}</option>
     `;
   }
 
@@ -500,68 +224,323 @@ function switchLanguage(lang) {
   const luggageSelect = document.getElementById('luggage');
   if (luggageSelect) {
     luggageSelect.innerHTML = `
-        <option value="">${translations[lang]['luggageOption']}</option>
-        <option value="0">0 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
-        <option value="1">1 ${lang === 'de' ? 'Gepäckstück' : 'luggage item'}</option>
-        <option value="2">2 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
-        <option value="3">3 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
-        <option value="4">4 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
-        <option value="5">5 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
+      <option value="">${t.luggageOption}</option>
+      <option value="0">0 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
+      <option value="1">1 ${lang === 'de' ? 'Gepäckstück' : 'luggage item'}</option>
+      <option value="2">2 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
+      <option value="3">3 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
+      <option value="4">4 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
+      <option value="5">5 ${lang === 'de' ? 'Gepäckstücke' : 'luggage items'}</option>
     `;
   }
 
-  // Flaggen & Text oben
-  const flag =
-    lang === 'de'
-      ? 'https://flagcdn.com/w40/de.png'
-      : 'https://flagcdn.com/w40/gb.png';
-  const languageText = lang === 'de' ? 'Deutsch' : 'English';
+  // Flagge & Sprachtext oben
+  const flagUrl =
+    lang === 'de' ? 'https://flagcdn.com/w40/de.png' : 'https://flagcdn.com/w40/gb.png';
+  const langText = lang === 'de' ? 'Deutsch' : 'English';
 
-  const currentFlag = document.getElementById('current-flag');
-  const currentLangText = document.getElementById('current-language-text');
-  if (currentFlag) currentFlag.src = flag;
-  if (currentLangText) currentLangText.textContent = languageText;
+  const flagEl = document.getElementById('current-flag');
+  const langEl = document.getElementById('current-language-text');
+  if (flagEl) flagEl.src = flagUrl;
+  if (langEl) langEl.textContent = langText;
 
-  const dropdown = document.getElementById('language-dropdown');
-  if (dropdown) dropdown.style.display = 'none';
-  const arrow = document.querySelector('.dropdown-arrow');
-  if (arrow) arrow.style.transform = 'rotate(0deg)';
-
-  // Sidebar-Sprachen
+  // Sidebar-Flagge
   const flagSidebar = document.getElementById('current-flag-sidebar');
   const textSidebar = document.getElementById('current-language-text-sidebar');
   const dropdownSidebar = document.getElementById('language-dropdown-sidebar');
-
   if (flagSidebar && textSidebar && dropdownSidebar) {
-    flagSidebar.src = flag;
-    textSidebar.textContent = languageText;
+    flagSidebar.src = flagUrl;
+    textSidebar.textContent = langText;
 
     dropdownSidebar.innerHTML = '';
     if (lang === 'de') {
       dropdownSidebar.innerHTML = `
-                <div onclick="switchLanguage('en')">
-                    <img src="https://flagcdn.com/w40/gb.png" alt="English"> English
-                </div>`;
+        <div onclick="switchLanguage('en')">
+          <img src="https://flagcdn.com/w40/gb.png" alt="English"> English
+        </div>`;
     } else {
       dropdownSidebar.innerHTML = `
-                <div onclick="switchLanguage('de')">
-                    <img src="https://flagcdn.com/w40/de.png" alt="Deutsch"> Deutsch
-                </div>`;
+        <div onclick="switchLanguage('de')">
+          <img src="https://flagcdn.com/w40/de.png" alt="Deutsch"> Deutsch
+        </div>`;
     }
-
     dropdownSidebar.style.display = 'none';
-  }
-
-  // Sidebar auf Mobile schließen
-  if (window.innerWidth <= 768) {
-    const sidebar = document.getElementById('mobileSidebar');
-    if (sidebar) sidebar.classList.remove('open');
   }
 }
 
 // -----------------------------------------------------------------------------
-// Mobile Menü
+// Sprachwechsel-Funktion (wird vom HTML onclick aufgerufen)
 // -----------------------------------------------------------------------------
+function switchLanguage(lang) {
+  if (!translations[lang]) {
+    lang = 'de';
+  }
+  localStorage.setItem('language', lang);
+  document.documentElement.lang = lang;
+
+  applyBookingTranslations(lang);
+
+  // Menü auf Mobile ggf. schließen
+  if (window.innerWidth <= 768) {
+    const sidebar = document.getElementById('mobileSidebar');
+    if (sidebar) sidebar.classList.remove('open');
+  }
+
+  // Dropdown oben schließen
+  const dropdown = document.getElementById('language-dropdown');
+  const arrow = document.querySelector('.dropdown-arrow');
+  if (dropdown) dropdown.style.display = 'none';
+  if (arrow) arrow.style.transform = 'rotate(0deg)';
+}
+
+// -----------------------------------------------------------------------------
+// DOMContentLoaded
+// -----------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  // Fahrzeug aus URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const selectedVehicle = urlParams.get('vehicle');
+  if (selectedVehicle) {
+    selectCar(selectedVehicle);
+  }
+
+  // gespeicherte Sprache anwenden
+  const lang = getLang();
+  applyBookingTranslations(lang);
+});
+
+// -----------------------------------------------------------------------------
+// Step-Handling
+// -----------------------------------------------------------------------------
+function nextStep(step) {
+  if (!validateStep(step)) return;
+  document.getElementById(`step${step}`).style.display = 'none';
+  const nextStepId = step + 1;
+  if (document.getElementById(`step${nextStepId}`)) {
+    document.getElementById(`step${nextStepId}`).style.display = 'block';
+    updateStepTracker(nextStepId);
+    currentStep = nextStepId;
+  }
+}
+
+function prevStep(step) {
+  document.getElementById(`step${step}`).style.display = 'none';
+  const prevStepId = step - 1;
+  if (prevStepId > 0) {
+    document.getElementById(`step${prevStepId}`).style.display = 'block';
+    updateStepTracker(prevStepId);
+    currentStep = prevStepId;
+  }
+}
+
+function selectCar(carName) {
+  selectedCar = carName;
+  document.querySelectorAll('.fahrzeug-option').forEach(option => {
+    option.style.border = '2px solid transparent';
+    if (option.querySelector('.fahrzeug-label').innerText === carName) {
+      option.style.border = '3px solid gold';
+    }
+  });
+}
+
+// -----------------------------------------------------------------------------
+// Buchung an Supabase senden
+// -----------------------------------------------------------------------------
+async function sendBooking() {
+  const lang = getLang();
+  const t = translations[lang];
+
+  if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
+    return;
+  }
+
+  const name = document.getElementById('name').value;
+  const phone = document.getElementById('phone').value;
+  const pickup = document.getElementById('pickup').value;
+  const destination = document.getElementById('destination').value;
+  const date = document.getElementById('date').value;
+  const time = document.getElementById('time').value;
+  const passengers = parseInt(document.getElementById('passengers').value || '0', 10);
+  const luggage = document.getElementById('luggage').value;
+
+  const emailInput = document.getElementById('email');
+  const email = emailInput ? emailInput.value : '';
+
+  const messageInput = document.getElementById('message');
+  const message = messageInput ? messageInput.value : '';
+
+  const carValue = selectedCar || '';
+
+  try {
+    const { error } = await supabase.from('bookings').insert([
+      {
+        name,
+        email,
+        phone,
+        pickup,
+        destination,
+        pickup_date: date,
+        pickup_time: time,
+        passengers,
+        luggage,
+        car: carValue,
+        message
+      }
+    ]);
+
+    if (error) {
+      console.error('Supabase insert error:', error);
+      showErrorPopup(t.errorTitle, t.errorSend);
+      return;
+    }
+
+    showSuccessPopup(t.successTitle, t.successMessage);
+
+    const form = document.querySelector('form');
+    if (form) form.reset();
+
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'none';
+    document.getElementById('step1').style.display = 'block';
+    currentStep = 1;
+    updateStepTracker(1);
+  } catch (err) {
+    console.error('Supabase connection error:', err);
+    showErrorPopup(t.errorTitle, t.errorConnection + (err.message || err.toString()));
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Validierung
+// -----------------------------------------------------------------------------
+function validateStep(step) {
+  const lang = getLang();
+  const t = translations[lang];
+
+  if (step === 1) {
+    const pickup = document.getElementById('pickup').value.trim();
+    const destination = document.getElementById('destination').value.trim();
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+
+    if (!pickup || !destination || !date || !time || !name || !phone) {
+      showErrorPopup(t.errorTitle, t.errorFillAllFields);
+      return false;
+    }
+  }
+
+  if (step === 2) {
+    const passengers = document.getElementById('passengers').value;
+    const luggage = document.getElementById('luggage').value;
+
+    if (!passengers || !luggage) {
+      showErrorPopup(t.errorTitle, t.errorFillAllFields);
+      return false;
+    }
+  }
+
+  if (step === 3) {
+    const passengers = parseInt(document.getElementById('passengers').value) || 0;
+    const luggage = parseInt(document.getElementById('luggage').value) || 0;
+
+    if (!selectedCar) {
+      showErrorPopup(t.errorTitle, t.errorSelectCar);
+      return false;
+    }
+
+    if (selectedCar === 'First Class' && (passengers > 3 || luggage > 3)) {
+      selectCar('Business VAN');
+      selectedCar = 'Business VAN';
+      showWarningPopup(t.warningTitle, t.warningMessage);
+      return false;
+    }
+
+    if (typeof grecaptcha !== 'undefined' && !grecaptcha.getResponse()) {
+      showErrorPopup(t.errorTitle, t.errorCaptcha);
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+// Popups
+// -----------------------------------------------------------------------------
+function showSuccessPopup(title, message) {
+  const oldPopup = document.querySelector('.success-popup');
+  if (oldPopup) oldPopup.remove();
+
+  let popup = document.createElement('div');
+  popup.classList.add('success-popup');
+
+  popup.innerHTML = `
+    <div class="success-popup-content">
+      <span class="success-icon">✔</span>
+      <h2>${title}</h2>
+      <p>${message}</p>
+      <button id="success-ok-btn">OK</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+
+  document.getElementById('success-ok-btn').addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 3000);
+}
+
+function showErrorPopup(title, message) {
+  let popup = document.createElement('div');
+  popup.classList.add('error-popup');
+
+  popup.innerHTML = `
+    <div class="error-popup-content">
+      <span class="error-icon">✖</span>
+      <h2>${title}</h2>
+      <p>${message}</p>
+      <button class="error-ok-btn">OK</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+
+  popup.querySelector('.error-ok-btn').addEventListener('click', () => {
+    popup.remove();
+  });
+}
+
+function showWarningPopup(title, message) {
+  let popup = document.createElement('div');
+  popup.classList.add('warning-popup');
+
+  popup.innerHTML = `
+    <div class="warning-popup-content">
+      <span class="warning-icon">⚠</span>
+      <h2>${title}</h2>
+      <p>${message}</p>
+      <button class="warning-ok-btn">OK</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+
+  popup.querySelector('.warning-ok-btn').addEventListener('click', () => {
+    popup.remove();
+  });
+}
+
+// -----------------------------------------------------------------------------
+// Menü & Sidebar
+// -----------------------------------------------------------------------------
+function toggleMenu() {
+  const menu = document.getElementById('menu');
+  if (menu) menu.classList.toggle('open');
+}
+
 function handleMenuClick() {
   if (window.innerWidth <= 768) {
     toggleMobileSidebar();
@@ -572,20 +551,46 @@ function handleMenuClick() {
 
 function toggleMobileSidebar() {
   const sidebar = document.getElementById('mobileSidebar');
-  sidebar.classList.toggle('open');
+  if (sidebar) sidebar.classList.toggle('open');
+}
+
+function toggleLanguageDropdown() {
+  const dropdown = document.getElementById('language-dropdown');
+  const arrow = document.querySelector('.dropdown-arrow');
+
+  if (!dropdown) return;
+
+  if (dropdown.style.display === 'block') {
+    dropdown.style.display = 'none';
+    if (arrow) arrow.style.transform = 'rotate(0deg)';
+  } else {
+    dropdown.style.display = 'block';
+    if (arrow) arrow.style.transform = 'rotate(180deg)';
+  }
 }
 
 function toggleLanguageDropdownSidebar() {
   const dropdown = document.getElementById('language-dropdown-sidebar');
-  const arrow = dropdown.previousElementSibling.querySelector('.dropdown-arrow');
+  const arrow = dropdown
+    ? dropdown.previousElementSibling.querySelector('.dropdown-arrow')
+    : null;
+
+  if (!dropdown) return;
 
   if (dropdown.style.display === 'block') {
     dropdown.style.display = 'none';
-    arrow.style.transform = 'rotate(0deg)';
+    if (arrow) arrow.style.transform = 'rotate(0deg)';
   } else {
     dropdown.style.display = 'block';
-    arrow.style.transform = 'rotate(180deg)';
+    if (arrow) arrow.style.transform = 'rotate(180deg)';
   }
+}
+
+function updateStepTracker(activeStep) {
+  let steps = document.querySelectorAll('.step-tracker .step');
+  steps.forEach((step, index) => {
+    step.classList.toggle('active', index + 1 === activeStep);
+  });
 }
 
 // -----------------------------------------------------------------------------
