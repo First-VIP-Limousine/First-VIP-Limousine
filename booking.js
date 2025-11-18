@@ -585,3 +585,5 @@ window.toggleMenu = toggleMenu;
 
 // Optional, falls du sie woanders mal brauchst:
 window.applyBookingTranslations = applyBookingTranslations;
+window.switchLanguage = switchLanguage;
+
