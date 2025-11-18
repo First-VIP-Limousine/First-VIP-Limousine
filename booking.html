@@ -210,24 +210,11 @@
         <a href="https://wa.me/41764630050" class="whatsapp-button" data-key="whatsapp">Auf WhatsApp schreiben</a>
       </div>
     </section>
-  
-    <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const savedLanguage = localStorage.getItem("language") || "de";
-
-    if (window.switchLanguage) {
-      window.switchLanguage(savedLanguage);
-    } else if (window.applyBookingTranslations) {
-      // Fallback: nur Buchungsübersetzungen anwenden
-      window.applyBookingTranslations(savedLanguage);
-      document.documentElement.lang = savedLanguage;
-    }
-  });
-</script>
   <footer>
     <p>© 2025. All rights reserved by First VIP Limousine.</p>
   </footer>
   </body>
 
   </html>
+
 
