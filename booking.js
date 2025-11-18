@@ -569,14 +569,19 @@ function updateStepTracker(activeStep) {
 }
 
 // -----------------------------------------------------------------------------
-// Globale Funktionen für onclick im HTML
+// Globale Funktionen für onclick im HTML (nur Buchungsseite)
 // -----------------------------------------------------------------------------
 window.nextStep = nextStep;
 window.prevStep = prevStep;
 window.sendBooking = sendBooking;
 window.selectCar = selectCar;
 
-// Booking-spezifische Übersetzungsfunktion global machen.
-// Der eigentliche Sprachwechsel (EN/DE) kommt komplett aus index.js.
-window.applyBookingTranslations = applyBookingTranslations;
+window.switchLanguage = switchLanguage;
+window.toggleLanguageDropdown = toggleLanguageDropdown;
+window.handleMenuClick = handleMenuClick;
+window.toggleMobileSidebar = toggleMobileSidebar;
+window.toggleLanguageDropdownSidebar = toggleLanguageDropdownSidebar;
+window.toggleMenu = toggleMenu;
 
+// Optional, falls du sie woanders mal brauchst:
+window.applyBookingTranslations = applyBookingTranslations;
