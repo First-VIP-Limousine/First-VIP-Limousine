@@ -1,5 +1,5 @@
 // --- Supabase einbinden ------------------------------------------------------
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/+esm';
 
 const SUPABASE_URL = 'https://hrevswjauihonpuubqgi.supabase.co';
 const SUPABASE_ANON_KEY =
@@ -605,6 +605,7 @@ window.selectCar = selectCar;
 // Nur die Buchungs-Übersetzungen global machen.
 // Die zentrale Sprachlogik kommt aus index.js (switchLanguage).
 window.applyBookingTranslations = applyBookingTranslations;
+
 
 
 
