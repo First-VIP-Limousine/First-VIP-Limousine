@@ -1,9 +1,6 @@
-// --- Supabase einbinden ------------------------------------------------------
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/+esm';
-
 const SUPABASE_URL = 'https://hrevswjauihonpuubqgi.supabase.co';
 const SUPABASE_ANON_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyZXZzd2phdWlob25wdXVicWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzOTkwNTgsImV4cCI6MjA3ODk3NTA1OH0.wsZoGyTbH3jNSMN3MldN6zJOt7bueHz2PeS1mabaMGk';
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyZXZzd2phdWlob25wdXVicWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzOTkwNTgsImV4cCI6MjA3ODk3NTA1OH0.wsZoGyTbH3jNSMN3MldN6zJOt7bueHz2PeS1mabaMGk';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -605,6 +602,9 @@ window.selectCar = selectCar;
 // Nur die Buchungs-Übersetzungen global machen.
 // Die zentrale Sprachlogik kommt aus index.js (switchLanguage).
 window.applyBookingTranslations = applyBookingTranslations;
+window.nextStep = nextStep;
+window.prevStep = prevStep; // falls du zurück hast
+
 
 
 
