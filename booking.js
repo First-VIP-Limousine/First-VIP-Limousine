@@ -2,7 +2,7 @@ const SUPABASE_URL = 'https://hrevswjauihonpuubqgi.supabase.co';
 const SUPABASE_ANON_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyZXZzd2phdWlob25wdXVicWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzOTkwNTgsImV4cCI6MjA3ODk3NTA1OH0.wsZoGyTbH3jNSMN3MldN6zJOt7bueHz2PeS1mabaMGk';
 
-// UMD build (cdn) stellt window.supabase bereit:
+// UMD build liefert window.supabase
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // -----------------------------------------------------------------------------
@@ -591,20 +591,12 @@ function updateStepTracker(activeStep) {
   });
 }
 
-// -----------------------------------------------------------------------------
-// Globale Funktionen für onclick im HTML (nur Buchungsseite)
-// -----------------------------------------------------------------------------
-// Diese werden in booking.html direkt benutzt (nextStep, prevStep, etc.)
 window.nextStep = nextStep;
 window.prevStep = prevStep;
 window.sendBooking = sendBooking;
 window.selectCar = selectCar;
-
-// Nur die Buchungs-Übersetzungen global machen.
-// Die zentrale Sprachlogik kommt aus index.js (switchLanguage).
 window.applyBookingTranslations = applyBookingTranslations;
-window.nextStep = nextStep;
-window.prevStep = prevStep; // falls du zurück hast
+
 
 
 
