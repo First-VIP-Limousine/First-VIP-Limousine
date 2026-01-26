@@ -607,3 +607,4 @@ window.selectCar = selectCar;
 window.applyBookingTranslations = applyBookingTranslations;
 
 
+
