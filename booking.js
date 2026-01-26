@@ -1,8 +1,9 @@
 const SUPABASE_URL = 'https://hrevswjauihonpuubqgi.supabase.co';
 const SUPABASE_ANON_KEY =
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyZXZzd2phdWlob25wdXVicWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzOTkwNTgsImV4cCI6MjA3ODk3NTA1OH0.wsZoGyTbH3jNSMN3MldN6zJOt7bueHz2PeS1mabaMGk';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyZXZzd2phdWlob25wdXVicWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzOTkwNTgsImV4cCI6MjA3ODk3NTA1OH0.wsZoGyTbH3jNSMN3MldN6zJOt7bueHz2PeS1mabaMGk';
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// UMD build (cdn) stellt window.supabase bereit:
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // -----------------------------------------------------------------------------
 // Zustände
@@ -604,6 +605,7 @@ window.selectCar = selectCar;
 window.applyBookingTranslations = applyBookingTranslations;
 window.nextStep = nextStep;
 window.prevStep = prevStep; // falls du zurück hast
+
 
 
 
