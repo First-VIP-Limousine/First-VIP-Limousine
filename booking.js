@@ -14,7 +14,7 @@ let selectedCar = null;
 // -----------------------------------------------------------------------------
 // Translations nur für diese Seite
 // -----------------------------------------------------------------------------
-const translations = {
+const bookingTranslations = {
   de: {
     // Navigation & Titel
     home: 'Startseite',
@@ -171,12 +171,12 @@ const translations = {
 // -----------------------------------------------------------------------------
 function getLang() {
   const stored = localStorage.getItem('language') || 'de';
-  return translations[stored] ? stored : 'de';
+  return bookingTranslations[stored] ? stored : 'de';
 }
 
 // wendet nur die Texte / Platzhalter / Select-Optionen für diese Seite an
 function applyBookingTranslations(lang) {
-  const t = translations[lang];
+  const t = bookingTranslations[lang];
 
   // alle data-key Elemente
   document.querySelectorAll('[data-key]').forEach(el => {
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.switchLanguage = function (newLang) {
     // Falsche Werte absichern
-    if (!translations[newLang]) {
+    if (!bookingTranslations[newLang]) {
       newLang = 'de';
     }
 
@@ -346,7 +346,7 @@ function selectCar(carName) {
 // -----------------------------------------------------------------------------
 async function sendBooking() {
   const lang = getLang();
-  const t = translations[lang];
+  const t = bookingTranslations[lang];
 
   if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
     return;
@@ -370,7 +370,7 @@ async function sendBooking() {
   const carValue = selectedCar || '';
 
   try {
-    const { error } = await supabase.from('bookings').insert([
+    const { error } = await supabaseClient.from('bookings').insert([
       {
         name,
         email,
@@ -413,7 +413,7 @@ async function sendBooking() {
 // -----------------------------------------------------------------------------
 function validateStep(step) {
   const lang = getLang();
-  const t = translations[lang];
+  const t = bookingTranslations[lang];
 
   if (step === 1) {
     const pickup = document.getElementById('pickup').value.trim();
