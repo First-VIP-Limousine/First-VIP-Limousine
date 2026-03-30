@@ -35,6 +35,8 @@ const bookingTranslations = {
     destinationPlaceholder: 'Zieladresse',
     namePlaceholder: 'Ihr Name',
     phonePlaceholder: 'Telefonnummer',
+    emailPlaceholder: 'E-Mail-Adresse',
+    messagePlaceholder: 'Nachricht (optional)',
     next: 'Weiter',
     back: 'Zurück',
 
@@ -110,6 +112,8 @@ const bookingTranslations = {
     destinationPlaceholder: 'Destination Address',
     namePlaceholder: 'Your Name',
     phonePlaceholder: 'Phone Number',
+    emailPlaceholder: 'Email address',
+    messagePlaceholder: 'Message (optional)',
     next: 'Next',
     back: 'Back',
 
