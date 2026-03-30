@@ -418,26 +418,36 @@ async function sendBooking() {
   }
 }
 
-// -----------------------------------------------------------------------------
-// Validierung
-// -----------------------------------------------------------------------------
 function validateStep(step) {
   const lang = getLang();
   const t = bookingTranslations[lang];
 
   if (step === 1) {
-    const pickup = document.getElementById('pickup').value.trim();
-    const destination = document.getElementById('destination').value.trim();
-    const date = document.getElementById('date').value;
-    const time = document.getElementById('time').value;
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
+  const pickup = document.getElementById('pickup').value.trim();
+  const destination = document.getElementById('destination').value.trim();
+  const date = document.getElementById('date').value;
+  const time = document.getElementById('time').value;
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const email = document.getElementById('email').value.trim();
 
-    if (!pickup || !destination || !date || !time || !name || !phone) {
-      showErrorPopup(t.errorTitle, t.errorFillAllFields);
-      return false;
-    }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!pickup || !destination || !date || !time || !name || !phone || !email) {
+    showErrorPopup(t.errorTitle, t.errorFillAllFields);
+    return false;
   }
+
+  if (!emailRegex.test(email)) {
+    showErrorPopup(
+      t.errorTitle,
+      lang === 'de'
+        ? 'Bitte geben Sie eine gültige E-Mail-Adresse ein.'
+        : 'Please enter a valid email address.'
+    );
+    return false;
+  }
+}
 
   if (step === 2) {
     const passengers = document.getElementById('passengers').value;
