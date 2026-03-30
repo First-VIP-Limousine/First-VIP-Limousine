@@ -208,6 +208,12 @@ function applyBookingTranslations(lang) {
   const phone = document.getElementById('phone');
   if (phone && t.phonePlaceholder) phone.placeholder = t.phonePlaceholder;
 
+  const email = document.getElementById('email');
+  if (email && t.emailPlaceholder) email.placeholder = t.emailPlaceholder;
+
+  const message = document.getElementById('message');
+  if (message && t.messagePlaceholder) message.placeholder = t.messagePlaceholder;
+
   // Select-Optionen Passagiere
   const passengerSelect = document.getElementById('passengers');
   if (passengerSelect) {
