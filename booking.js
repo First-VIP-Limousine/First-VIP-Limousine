@@ -617,9 +617,17 @@ window.sendBooking = sendBooking;
 window.selectCar = selectCar;
 window.applyBookingTranslations = applyBookingTranslations;
 
+document.addEventListener("DOMContentLoaded", function () {
+  const messageField = document.getElementById("message");
 
+  if (messageField) {
+    const badValues = [
+      "Message (optional)",
+      "Nachricht (optional)"
+    ];
 
-
-
-
-
+    if (badValues.includes(messageField.value.trim())) {
+      messageField.value = "";
+    }
+  }
+});
