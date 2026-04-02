@@ -2000,3 +2000,23 @@ html, body {
         min-height: 90px;
     }
 }
+
+/* Message Placeholder korrekt anzeigen */
+#message::placeholder {
+    font-weight: normal;
+    color: #888;
+}
+
+/* Textarea richtig ausrichten */
+#step1 .message-group textarea {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    vertical-align: top;
+    padding-top: 2px;
+}
+
+#step1 .message-group {
+    align-items: flex-start;
+}
