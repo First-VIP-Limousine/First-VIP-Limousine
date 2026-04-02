@@ -1958,18 +1958,22 @@ html, body {
 #step1 .input-row.full-width-row {
     justify-content: center;
 }
+
 #step1 .input-row.full-width-row .input-group {
     width: 100%;
-    max-width: 760px;
+    max-width: 780px;
 }
+
 /* E-Mail normal */
 #step1 .input-row.full-width-row input[type="email"] {
     width: 100%;
 }
-/* Nachricht als richtiges großes Feld */
+
+/* Nachrichtenfeld */
 #step1 .message-group {
     align-items: flex-start;
     padding-top: 12px;
+    position: relative;
 }
 
 #step1 .message-group i {
@@ -1978,15 +1982,76 @@ html, body {
 
 #message {
     width: 100%;
-    min-height: 90px;
+    min-height: 110px;
     border: none;
     outline: none;
     background: transparent;
     resize: none;
     font: inherit;
+    font-size: 16px;
+    font-weight: normal;
     line-height: 1.4;
+    text-align: left;
     padding: 0;
     margin: 0;
+    position: relative;
+    z-index: 2;
+}
+
+/* echten Browser-Placeholder unsichtbar machen */
+#message::placeholder {
+    color: transparent;
+}
+
+/* eigener Placeholder */
+#step1 .message-group::after {
+    content: "Message";
+    position: absolute;
+    top: 14px;
+    left: 52px;
+    color: #888;
+    font-size: 16px;
+    font-weight: normal;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* nur (optional) fett */
+#step1 .message-group::before {
+    content: "(optional)";
+    position: absolute;
+    top: 14px;
+    left: 122px;
+    color: #888;
+    font-size: 16px;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* sobald man tippt oder ins Feld klickt, verschwindet der Text */
+#message:focus + * {
+    display: none;
+}
+
+#step1 .message-group:focus-within::before,
+#step1 .message-group:focus-within::after {
+    display: none;
+}
+
+#message:not(:placeholder-shown) ~ *,
+#step1 .message-group textarea:not(:placeholder-shown) ~ * {
+    display: none;
+}
+
+#step1 .message-group textarea:not(:placeholder-shown) + * {
+    display: none;
+}
+
+/* sicher ausblenden, wenn Inhalt da ist */
+#step1 .message-group.has-text::before,
+#step1 .message-group.has-text::after {
+    display: none;
 }
 
 /* Mobile */
@@ -1998,25 +2063,18 @@ html, body {
 
     #message {
         min-height: 90px;
+        font-size: 14px;
     }
-}
 
-/* Message Placeholder korrekt anzeigen */
-#message::placeholder {
-    font-weight: normal;
-    color: #888;
-}
+    #step1 .message-group::after {
+        top: 14px;
+        left: 52px;
+        font-size: 14px;
+    }
 
-/* Textarea richtig ausrichten */
-#step1 .message-group textarea {
-    display: block;
-    width: 100%;
-    height: 100%;
-    text-align: left;
-    vertical-align: top;
-    padding-top: 2px;
-}
-
-#step1 .message-group {
-    align-items: flex-start;
+    #step1 .message-group::before {
+        top: 14px;
+        left: 108px;
+        font-size: 14px;
+    }
 }
