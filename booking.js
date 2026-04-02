@@ -184,15 +184,16 @@ function applyBookingTranslations(lang) {
 
   // alle data-key Elemente
   document.querySelectorAll('[data-key]').forEach(el => {
-    const key = el.getAttribute('data-key');
-    const value = t[key];
-    if (!value) return;
+  const key = el.getAttribute('data-key');
+  const value = t[key];
+  if (!value) return;
 
-    // Inputs bekommen keinen innerHTML, sondern placeholder separat
-    if (el.tagName === 'INPUT') return;
+  // Inputs und Textarea bekommen keinen innerHTML,
+  // sondern ihren placeholder separat
+  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') return;
 
-    el.innerHTML = value;
-  });
+  el.innerHTML = value;
+});
 
   // Platzhalter für Inputs
   const pickup = document.getElementById('pickup');
