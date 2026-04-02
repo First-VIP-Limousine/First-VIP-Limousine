@@ -1958,15 +1958,35 @@ html, body {
 #step1 .input-row.full-width-row {
     justify-content: center;
 }
-
 #step1 .input-row.full-width-row .input-group {
     width: 100%;
-    max-width: 620px;
+    max-width: 760px;
+}
+/* E-Mail normal */
+#step1 .input-row.full-width-row input[type="email"] {
+    width: 100%;
+}
+/* Nachricht als richtiges großes Feld */
+#step1 .message-group {
+    align-items: flex-start;
+    padding-top: 12px;
 }
 
-/* Nachricht etwas höher */
+#step1 .message-group i {
+    margin-top: 6px;
+}
+
 #message {
-    min-height: 60px;
+    width: 100%;
+    min-height: 90px;
+    border: none;
+    outline: none;
+    background: transparent;
+    resize: none;
+    font: inherit;
+    line-height: 1.4;
+    padding: 0;
+    margin: 0;
 }
 
 /* Mobile */
