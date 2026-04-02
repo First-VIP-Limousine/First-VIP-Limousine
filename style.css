@@ -1973,7 +1973,6 @@ html, body {
 #step1 .message-group {
     align-items: flex-start;
     padding-top: 12px;
-    position: relative;
 }
 
 #step1 .message-group i {
@@ -1994,64 +1993,14 @@ html, body {
     text-align: left;
     padding: 0;
     margin: 0;
-    position: relative;
-    z-index: 2;
 }
 
-/* echten Browser-Placeholder unsichtbar machen */
+/* echter Placeholder wie bei normalen Feldern */
 #message::placeholder {
-    color: transparent;
-}
-
-/* eigener Placeholder */
-#step1 .message-group::after {
-    content: "Message";
-    position: absolute;
-    top: 14px;
-    left: 52px;
     color: #888;
     font-size: 16px;
     font-weight: normal;
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* nur (optional) fett */
-#step1 .message-group::before {
-    content: "(optional)";
-    position: absolute;
-    top: 14px;
-    left: 122px;
-    color: #888;
-    font-size: 16px;
-    font-weight: bold;
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* sobald man tippt oder ins Feld klickt, verschwindet der Text */
-#message:focus + * {
-    display: none;
-}
-
-#step1 .message-group:focus-within::before,
-#step1 .message-group:focus-within::after {
-    display: none;
-}
-
-#message:not(:placeholder-shown) ~ *,
-#step1 .message-group textarea:not(:placeholder-shown) ~ * {
-    display: none;
-}
-
-#step1 .message-group textarea:not(:placeholder-shown) + * {
-    display: none;
-}
-
-/* sicher ausblenden, wenn Inhalt da ist */
-#step1 .message-group.has-text::before,
-#step1 .message-group.has-text::after {
-    display: none;
+    opacity: 1;
 }
 
 /* Mobile */
@@ -2066,15 +2015,7 @@ html, body {
         font-size: 14px;
     }
 
-    #step1 .message-group::after {
-        top: 14px;
-        left: 52px;
-        font-size: 14px;
-    }
-
-    #step1 .message-group::before {
-        top: 14px;
-        left: 108px;
+    #message::placeholder {
         font-size: 14px;
     }
 }
